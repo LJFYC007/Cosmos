@@ -18,13 +18,13 @@ public:
 	static std::map<std::string, Texture> Textures;
 
 	static Shader LoadShader(const char* vertexPath, const char* fragmentPath, std::string name);
-	static Shader GetShader(std::string name); 
+	static Shader& GetShader(std::string name); 
 	static Texture LoadTexture(const char* file, std::string name);
 	static Texture GetTexture(std::string name);
 	static void Clear()
 	{
-		//for (auto i : Shaders) glDeleteProgram(i.second.ID);
-		//for (auto i : Textures) glDeleteTextures(1, &i.second.ID);
+		for (auto it : Shaders) glDeleteProgram(it.second.ID);
+		for (auto it : Textures) glDeleteTextures(1, &it.second.ID);
 	}
 		
 private: 
@@ -45,7 +45,7 @@ Texture Resource::LoadTexture(const char* file, std::string name)
 	Textures[name] = loadTextureFromFile(file);
 	return Textures[name];
 }
-Shader Resource::GetShader(std::string name) { return Shaders[name]; }
+Shader& Resource::GetShader(std::string name) { return Shaders[name]; }
 Texture Resource::GetTexture(std::string name) { return Textures[name]; }
 
 Shader Resource::loadShaderFromFile(const char* vertexPath, const char* fragmentPath)
