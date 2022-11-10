@@ -9,6 +9,7 @@
 #include "include/camera.h"
 #include "include/resource.h"
 #include "include/sphere_render.h"
+#include "calculate.h"
 
 #include <iostream>
 
@@ -28,7 +29,7 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastTime = 0.0f;
 
-SphereRenderer* Renderer;
+SphereRenderer* sphere;
 
 glm::vec3 cubePositions[] = {
 	glm::vec3(0.0f,  0.0f,  0.0f),
@@ -52,7 +53,7 @@ void processInput(GLFWwindow* window)
 {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	
+
 	// WASD movement
 	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
 		camera.ProcessKeyboard(FORWARD, deltaTime);
@@ -116,12 +117,13 @@ int main()
 
 	// load & create shader & textures
 	// -----------------------------------------------	
-	Resource::LoadShader("color.vs", "color.fs", "earth");
-	Resource::LoadTexture("resources/textures/texturemap.jpg", "earth");
-	Resource::GetShader("earth").use();
-	Resource::GetShader("earth").setInt("aTexture", 0);
+	Resource::LoadShader("color.vs", "color.fs", "sphere");
+	Resource::LoadTexture("resources/textures/earth.jpg", "earth");
+	Resource::LoadTexture("resources/textures/sun.jpg", "sun");
+	Resource::GetShader("sphere").use();
+	Resource::GetShader("sphere").setInt("aTexture", 0);
 
-	Renderer = new SphereRenderer(Resource::GetShader("earth"));
+	sphere = new SphereRenderer(Resource::GetShader("sphere"));
 
 	// render loop
 	// -----------------------------------------------	
@@ -133,24 +135,23 @@ int main()
 		lastTime = currentTime;
 
 		// Input
-		processInput(window); 
+		processInput(window);
 
 		// Render
 		// ------
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // alpha : 不透明度
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		Resource::GetShader("earth").use();
+		Resource::GetShader("sphere").use();
 
 		// cube transformations
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.01f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
 		glm::mat4 model = glm::mat4(1.0f);
-		Resource::GetShader("earth").setMat4("projection", projection);
-		Resource::GetShader("earth").setMat4("view", view);
+		Resource::GetShader("sphere").setMat4("projection", projection);
+		Resource::GetShader("sphere").setMat4("view", view);
 
-		REP(i, 0, 9)
-			Renderer->Draw(Resource::GetTexture("earth"), cubePositions[i], 1.0f);
+		Calculate::Render(sphere);
 
 		// Swap Buffer
 		glfwSwapBuffers(window);

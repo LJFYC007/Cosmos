@@ -1,3 +1,4 @@
+#pragma once
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
@@ -13,7 +14,7 @@ class SphereRenderer
 public : 
     SphereRenderer(Shader& shader);
     ~SphereRenderer();
-    void Draw(Texture texture, glm::vec3 position, GLfloat size);
+    void Draw(Texture texture, glm::vec3 position, GLfloat size = 1.0f);
 
 private : 
     Shader shader;

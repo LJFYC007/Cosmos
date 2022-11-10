@@ -52,5 +52,8 @@
     <ClInclude Include="include\sphere_render.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="calculate.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
