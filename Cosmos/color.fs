@@ -7,6 +7,6 @@ out vec4 FragColor;
 
 void main()
 {
-    vec2 Texture = vec2(Color.x * 2, Color.y * 2);
-    FragColor = texture(aTexture, Texture) * Color;
+    vec2 Texture = vec2(Color.x + 0.5, Color.y + 0.5);
+    FragColor = texture(aTexture, Texture);
 }
