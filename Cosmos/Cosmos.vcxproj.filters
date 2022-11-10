@@ -40,9 +40,6 @@
     <ClInclude Include="include\mesh.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\model.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\shader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
