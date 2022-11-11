@@ -41,7 +41,7 @@ void SphereRenderer::Draw(Texture texture, glm::vec3 position, GLfloat size)
     shader.setMat4("model", model);
 
     glActiveTexture(GL_TEXTURE0);
-    //texture.Bind();
+    texture.Bind();
     glBindVertexArray(VAO);
 	glDrawArrays(GL_TRIANGLES, 0, 6 * lats * lons);
     glBindVertexArray(0);
