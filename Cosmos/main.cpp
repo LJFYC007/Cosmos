@@ -8,7 +8,8 @@
 
 #include "include/camera.h"
 #include "include/resource.h"
-#include "include/sphere_render.h"
+#include "earth_render.h"
+#include "sun_render.h"
 #include "calculate.h"
 
 #include <iostream>
@@ -28,8 +29,6 @@ bool firstMouse = true;
 // timing
 float deltaTime = 0.0f;
 float lastTime = 0.0f;
-
-SphereRenderer* sphere;
 
 glm::vec3 cubePositions[] = {
 	glm::vec3(0.0f,  0.0f,  0.0f),
@@ -117,12 +116,14 @@ int main()
 
 	// load & create shader & textures
 	// -----------------------------------------------	
-	Resource::LoadShader("color.vs", "color.fs", "sphere");
+	Resource::LoadShader("earth.vs", "earth.fs", "earth");
+	Resource::LoadShader("sun.vs", "sun.fs", "sun");
 	Resource::LoadTexture("resources/textures/2k_earth_daymap.jpg", "earth");
+	Resource::LoadTexture("resources/textures/2k_earth_specular_map.png", "earth_specular");
+	Resource::LoadTexture("resources/textures/2k_earth_normal_map.png", "earth_normal");
 	Resource::LoadTexture("resources/textures/sun.jpg", "sun");
-	Resource::GetShader("sphere").use();
-	Resource::GetShader("sphere").setInt("aTexture", 0);
-	sphere = new SphereRenderer(Resource::GetShader("sphere"));
+	EarthRenderer earth(Resource::GetShader("earth"));
+	SunRenderer sun(Resource::GetShader("sun"));
 
 	std::cout << "Finish Initialize ---------- Start Rendering" << std::endl;
 
@@ -143,16 +144,23 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // alpha : 不透明度
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		Resource::GetShader("sphere").use();
-
-		// cube transformations
+		Resource::GetShader("earth").use();
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.01f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
-		glm::mat4 model = glm::mat4(1.0f);
-		Resource::GetShader("sphere").setMat4("projection", projection);
-		Resource::GetShader("sphere").setMat4("view", view);
+		Resource::GetShader("earth").setMat4("projection", projection);
+		Resource::GetShader("earth").setMat4("view", view);
 
-		Calculate::Render(sphere);
+		//Resource::GetShader("earth").setVec3("pointLights[0].position", glm::vec3(view * glm::vec4(2.0f, 1.0f, -8.0f, 1.0f)));
+
+		Resource::GetShader("earth").setVec3("viewPos", camera.Position);
+		Resource::GetShader("earth").setVec3("lightPos", glm::vec3(2.0f, 1.0f, -8.0f));
+
+
+		Resource::GetShader("sun").use();
+		Resource::GetShader("sun").setMat4("projection", projection);
+		Resource::GetShader("sun").setMat4("view", view);
+
+		Calculate::Render(sun, earth);
 
 		// Swap Buffer
 		glfwSwapBuffers(window);

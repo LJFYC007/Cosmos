@@ -26,10 +26,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="color.fs">
+    <None Include="earth.fs">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="color.vs">
+    <None Include="earth.vs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="sun.fs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="sun.vs">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>
@@ -49,10 +55,13 @@
     <ClInclude Include="include\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\sphere_render.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="calculate.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="earth_render.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="sun_render.h">
       <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>

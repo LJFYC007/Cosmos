@@ -138,17 +138,20 @@
     <ClCompile Include="init.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="color.fs" />
-    <None Include="color.vs" />
+    <None Include="earth.fs" />
+    <None Include="earth.vs" />
+    <None Include="sun.fs" />
+    <None Include="sun.vs" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="calculate.h" />
+    <ClInclude Include="earth_render.h" />
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\mesh.h" />
     <ClInclude Include="include\resource.h" />
     <ClInclude Include="include\shader.h" />
-    <ClInclude Include="include\sphere_render.h" />
     <ClInclude Include="include\texture.h" />
+    <ClInclude Include="sun_render.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

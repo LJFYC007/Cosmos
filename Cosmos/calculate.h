@@ -1,6 +1,7 @@
 #pragma once
 #include "include/resource.h"
-#include "include/sphere_render.h"
+#include "earth_render.h"
+#include "sun_render.h"
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -9,13 +10,13 @@
 class Calculate
 {
 public: 
-	static void Render(SphereRenderer* sphere);
+	static void Render(SunRenderer& sun, EarthRenderer& earth);
 
-private:	
+private: 
 };
 
-void Calculate::Render(SphereRenderer* sphere)
+void Calculate::Render(SunRenderer& sun, EarthRenderer& earth)
 {
-	sphere->Draw(Resource::GetTexture("earth"), glm::vec3(0.0f, 0.0f, 0.0f));
-	sphere->Draw(Resource::GetTexture("sun"), glm::vec3(2.0f, 5.0f, -15.0f));
+	earth.Draw(Resource::GetTexture("earth"), Resource::GetTexture("earth_specular"), Resource::GetTexture("earth_normal"), glm::vec3(0.0f, 0.0f, 0.0f));
+	sun.Draw(Resource::GetTexture("sun"), glm::vec3(2.0f,1.0f, -1.0f));
 }
