@@ -8,6 +8,9 @@
 
 const GLuint lats = 100;
 const GLuint lons = 100;
+const GLfloat r = 0.5f;
+
+GLfloat vertices[5 * 6 * lats * lons]; 
 
 class SphereRenderer
 {
@@ -22,6 +25,10 @@ private :
     void initRenderData();
     void createSphere(GLfloat* sphere, GLuint Longitude, GLuint Latitude);
     glm::vec3 getPoint(GLfloat u, GLfloat v);
+    glm::vec2 getTexCoord(GLfloat u, GLfloat v)
+    {
+        return glm::vec2(v, 1 - u);
+    }
 };
 
 SphereRenderer::SphereRenderer(Shader& other)
@@ -50,7 +57,6 @@ void SphereRenderer::Draw(Texture texture, glm::vec3 position, GLfloat size)
 void SphereRenderer::initRenderData()
 {
     GLuint VBO;
-	GLfloat vertices[6 * 3 * lats * lons]; 
 	createSphere(vertices, lons, lats);
 
     glGenVertexArrays(1, &VAO);
@@ -59,9 +65,9 @@ void SphereRenderer::initRenderData()
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
 
 	glBindVertexArray(VAO);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
 	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
 	glEnableVertexAttribArray(1);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -69,7 +75,6 @@ void SphereRenderer::initRenderData()
 }
 
 glm::vec3 SphereRenderer::getPoint(GLfloat u, GLfloat v) {
-    GLfloat r = 0.5f;
 	GLfloat pi = glm::pi<GLfloat>();
 	GLfloat z = r * std::cos(pi * u);
 	GLfloat x = r * std::sin(pi * u) * std::cos(2 * pi * v);
@@ -89,17 +94,29 @@ void SphereRenderer::createSphere(GLfloat* sphere, GLuint Longitude, GLuint Lati
       glm::vec3 point4 = getPoint(lat * lat_step, (lon + 1) * lon_step);
       memcpy(sphere + offset, glm::value_ptr(point1), 3 * sizeof(GLfloat));
       offset += 3;
+      memcpy(sphere + offset, glm::value_ptr(getTexCoord(lat * lat_step, lon * lon_step)), 2 * sizeof(GLfloat));
+      offset += 2;
       memcpy(sphere + offset, glm::value_ptr(point4), 3 * sizeof(GLfloat));
       offset += 3;
+      memcpy(sphere + offset, glm::value_ptr(getTexCoord(lat * lat_step, (lon + 1) * lon_step)), 2 * sizeof(GLfloat));
+      offset += 2;
       memcpy(sphere + offset, glm::value_ptr(point3), 3 * sizeof(GLfloat));
       offset += 3;
+      memcpy(sphere + offset, glm::value_ptr(getTexCoord((lat + 1) * lat_step, (lon + 1) * lon_step)), 2 * sizeof(GLfloat));
+      offset += 2;
 
       memcpy(sphere + offset, glm::value_ptr(point1), 3 * sizeof(GLfloat));
       offset += 3;
+      memcpy(sphere + offset, glm::value_ptr(getTexCoord(lat * lat_step, lon * lon_step)), 2 * sizeof(GLfloat));
+      offset += 2;
       memcpy(sphere + offset, glm::value_ptr(point3), 3 * sizeof(GLfloat));
       offset += 3;
+      memcpy(sphere + offset, glm::value_ptr(getTexCoord((lat + 1) * lat_step, (lon + 1) * lon_step)), 2 * sizeof(GLfloat));
+      offset += 2;
       memcpy(sphere + offset, glm::value_ptr(point2), 3 * sizeof(GLfloat));
       offset += 3;
+      memcpy(sphere + offset, glm::value_ptr(getTexCoord((lat + 1) * lat_step, lon * lon_step)), 2 * sizeof(GLfloat));
+      offset += 2;
     }
   }
 }

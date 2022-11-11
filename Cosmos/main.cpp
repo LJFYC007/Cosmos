@@ -118,12 +118,13 @@ int main()
 	// load & create shader & textures
 	// -----------------------------------------------	
 	Resource::LoadShader("color.vs", "color.fs", "sphere");
-	Resource::LoadTexture("resources/textures/earth.jpg", "earth");
+	Resource::LoadTexture("resources/textures/2k_earth_daymap.jpg", "earth");
 	Resource::LoadTexture("resources/textures/sun.jpg", "sun");
 	Resource::GetShader("sphere").use();
 	Resource::GetShader("sphere").setInt("aTexture", 0);
-
 	sphere = new SphereRenderer(Resource::GetShader("sphere"));
+
+	std::cout << "Finish Initialize ---------- Start Rendering" << std::endl;
 
 	// render loop
 	// -----------------------------------------------	
