@@ -33,7 +33,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, fs_in.TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, fs_in.TexCoords));
-    vec3 specular = light.specular * spec * vec3(texture(material.specular, fs_in.TexCoords));
+    vec3 specular = light.specular * spec * vec3(texture(material.specular, fs_in.TexCoords).r);
     float dis = length(fs_in.TangentViewPos - fs_in.FragPos);
     float attenuation = 1.0 / (light.constant + light.linear * dis + light.quadratic * (dis * dis));
     return (ambient + diffuse + specular) * attenuation;

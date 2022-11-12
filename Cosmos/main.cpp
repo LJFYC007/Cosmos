@@ -119,7 +119,7 @@ int main()
 	Resource::LoadShader("earth.vs", "earth.fs", "earth");
 	Resource::LoadShader("sun.vs", "sun.fs", "sun");
 	Resource::LoadTexture("resources/textures/2k_earth_daymap.jpg", "earth");
-	Resource::LoadTexture("resources/textures/2k_earth_specular_map.png", "earth_specular");
+	Resource::LoadTexture("resources/textures/2k_earth_specular_map.jpg", "earth_specular");
 	Resource::LoadTexture("resources/textures/2k_earth_normal_map.png", "earth_normal");
 	Resource::LoadTexture("resources/textures/sun.jpg", "sun");
 	EarthRenderer earth(Resource::GetShader("earth"));
@@ -149,12 +149,8 @@ int main()
 		glm::mat4 view = camera.GetViewMatrix();
 		Resource::GetShader("earth").setMat4("projection", projection);
 		Resource::GetShader("earth").setMat4("view", view);
-
-		//Resource::GetShader("earth").setVec3("pointLights[0].position", glm::vec3(view * glm::vec4(2.0f, 1.0f, -8.0f, 1.0f)));
-
 		Resource::GetShader("earth").setVec3("viewPos", camera.Position);
 		Resource::GetShader("earth").setVec3("lightPos", glm::vec3(2.0f, 1.0f, -8.0f));
-
 
 		Resource::GetShader("sun").use();
 		Resource::GetShader("sun").setMat4("projection", projection);

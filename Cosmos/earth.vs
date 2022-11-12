@@ -23,11 +23,6 @@ uniform vec3 viewPos;
 void main()
 {
     gl_Position = projection * view * model * vec4(aPos, 1.0);
-    /*
-    Normal = mat3(transpose(inverse(view * model))) * a3;
-    FragPos = vec3(view * model * vec4(aPos, 1.0));
-    TexCoords = aTexCoord;
-    */
 
     vs_out.FragPos = vec3(model * vec4(aPos, 1.0));   
     vs_out.TexCoords = aTexCoord;
