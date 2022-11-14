@@ -123,14 +123,21 @@ int main()
 	// ------------------ earth ----------------------
 	Resource::LoadShader("earth.vs", "earth.fs", "earth");
 	std::vector<Texture> earthTextures;
-	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_daymap.jpg", "earth_diffuse", "diffuse"));
-	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_specular_map.jpg", "earth_specular", "specular"));
-	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_normal_map.png", "earth_normal", "normal"));
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_day_map.jpg", "earth_diffuse", "diffuse"));
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_specular_map.jpg", "earth_specular", "specular"));
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_normal_map.png", "earth_normal", "normal"));
 	Sphere sphere;
 	Resource::LoadMesh(sphere.vertices, sphere.indices, earthTextures, "earth");
 	EarthRenderer earth(Resource::GetShader("earth"), Resource::GetMesh("earth"));
 
-	// ------------------- sun ------------------------
+	// ------------------ moon ----------------------
+	Resource::LoadShader("moon.vs", "moon.fs", "moon");
+	std::vector<Texture> moonTextures;
+	moonTextures.push_back(Resource::LoadTexture("resources/textures/moon_diffuse_map.jpg", "moon_diffuse", "diffuse"));
+	Resource::LoadMesh(sphere.vertices, sphere.indices, moonTextures, "moon");
+	MoonRenderer moon(Resource::GetShader("moon"), Resource::GetMesh("moon"));
+
+	// ------------------- sun -----------------------
 	Resource::LoadShader("sun.vs", "sun.fs", "sun");
 	std::vector<Texture> sunTextures;
 	sunTextures.push_back(Resource::LoadTexture("resources/textures/sun.jpg", "sun_diffuse", "diffuse"));
@@ -156,19 +163,26 @@ int main()
 		glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // alpha : 不透明度
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-		Resource::GetShader("earth").use();
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.01f, 100.0f);
 		glm::mat4 view = camera.GetViewMatrix();
+
+		Resource::GetShader("earth").use();
 		Resource::GetShader("earth").setMat4("projection", projection);
 		Resource::GetShader("earth").setMat4("view", view);
 		Resource::GetShader("earth").setVec3("viewPos", camera.Position);
 		Resource::GetShader("earth").setVec3("lightPos", glm::vec3(2.0f, 1.0f, -8.0f));
 
+		Resource::GetShader("moon").use();
+		Resource::GetShader("moon").setMat4("projection", projection);
+		Resource::GetShader("moon").setMat4("view", view);
+		Resource::GetShader("moon").setVec3("viewPos", camera.Position);
+		Resource::GetShader("moon").setVec3("lightPos", glm::vec3(2.0f, 1.0f, -8.0f));
+
 		Resource::GetShader("sun").use();
 		Resource::GetShader("sun").setMat4("projection", projection);
 		Resource::GetShader("sun").setMat4("view", view);
 
-		Calculate::Render(sun, earth);
+		Calculate::Render(sun, earth, moon);
 
 		// Swap Buffer
 		glfwSwapBuffers(window);

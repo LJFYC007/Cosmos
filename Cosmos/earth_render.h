@@ -6,6 +6,7 @@
 #include "include/render.h"
 #include "include/shader.h"
 #include "include/mesh.h"
+#include "include/camera.h"
 
 class EarthRenderer : public Renderer
 {
@@ -17,6 +18,7 @@ public :
 void EarthRenderer::Draw(glm::vec3 position, GLfloat size)
 {
     shader.use();
+
     glm::mat4 model = glm::mat4(1.0f);
     model = glm::translate(model, position);
     model = glm::scale(model, glm::vec3(size));

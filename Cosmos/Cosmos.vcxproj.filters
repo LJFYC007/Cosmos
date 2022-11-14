@@ -38,6 +38,12 @@
     <None Include="sun.vs">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="moon.fs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="moon.vs">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\camera.h">
@@ -69,6 +75,9 @@
     </ClInclude>
     <ClInclude Include="include\render.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="moon_render.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

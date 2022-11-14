@@ -5,6 +5,7 @@
 
 #include "shader.h"
 #include "mesh.h"
+#include "camera.h"
 
 class Renderer
 {
