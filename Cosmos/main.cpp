@@ -8,11 +8,14 @@
 
 #include "include/camera.h"
 #include "include/resource.h"
+#include "include/texture.h"
+#include "include/sphere.h"
 #include "earth_render.h"
 #include "sun_render.h"
 #include "calculate.h"
 
 #include <iostream>
+#include <vector>
 
 #define REP(i, a, b) for ( int i = a, _end_ = b; i <= _end_; ++ i )
 
@@ -114,15 +117,21 @@ int main()
 	// -----------------------------------------------	
 	glEnable(GL_DEPTH_TEST);
 
-	// load & create shader & textures
+	// load shader & textures & meshes
 	// -----------------------------------------------	
 	Resource::LoadShader("earth.vs", "earth.fs", "earth");
 	Resource::LoadShader("sun.vs", "sun.fs", "sun");
-	Resource::LoadTexture("resources/textures/2k_earth_daymap.jpg", "earth");
-	Resource::LoadTexture("resources/textures/2k_earth_specular_map.jpg", "earth_specular");
-	Resource::LoadTexture("resources/textures/2k_earth_normal_map.png", "earth_normal");
-	Resource::LoadTexture("resources/textures/sun.jpg", "sun");
-	EarthRenderer earth(Resource::GetShader("earth"));
+	
+	std::vector<Texture> earthTextures;
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_daymap.jpg", "earth_diffuse", "diffuse"));
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_specular_map.jpg", "earth_specular", "specular"));
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_normal_map.png", "earth_normal", "normal"));
+	Resource::LoadTexture("resources/textures/sun.jpg", "sun", "diffuse");
+
+	Sphere earth;
+	Resource::LoadMesh(earth.vertices, earth.indices, earthTextures, "earth");
+
+	EarthRenderer Render(Resource::GetShader("earth"), Resource::GetMesh("earth"));
 	SunRenderer sun(Resource::GetShader("sun"));
 
 	std::cout << "Finish Initialize ---------- Start Rendering" << std::endl;
@@ -156,7 +165,7 @@ int main()
 		Resource::GetShader("sun").setMat4("projection", projection);
 		Resource::GetShader("sun").setMat4("view", view);
 
-		Calculate::Render(sun, earth);
+		Calculate::Render(sun, Render);
 
 		// Swap Buffer
 		glfwSwapBuffers(window);

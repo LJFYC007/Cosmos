@@ -12,10 +12,12 @@ class Texture
 public: 
 	unsigned int ID; 
 	int width, height, nrChannels;
+	std::string type;
 	Texture() : width(0), height(0), nrChannels(0) { glGenTextures(1, &ID); }
 		
-	void Generate(const char* texturePath) 
+	void Generate(const char* texturePath, std::string textureType) 
 	{
+		type = textureType;
 		unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
 		if (data)
 		{

@@ -17,6 +17,6 @@ private:
 
 void Calculate::Render(SunRenderer& sun, EarthRenderer& earth)
 {
-	earth.Draw(Resource::GetTexture("earth"), Resource::GetTexture("earth_specular"), Resource::GetTexture("earth_normal"), glm::vec3(0.0f, 0.0f, 0.0f));
+	earth.Draw(glm::vec3(0.0f, 0.0f, 0.0f));
 	sun.Draw(Resource::GetTexture("sun"), glm::vec3(2.0f,1.0f, -1.0f));
 }

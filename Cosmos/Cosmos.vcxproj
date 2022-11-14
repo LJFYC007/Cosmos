@@ -150,6 +150,7 @@
     <ClInclude Include="include\mesh.h" />
     <ClInclude Include="include\resource.h" />
     <ClInclude Include="include\shader.h" />
+    <ClInclude Include="include\sphere.h" />
     <ClInclude Include="include\texture.h" />
     <ClInclude Include="sun_render.h" />
   </ItemGroup>

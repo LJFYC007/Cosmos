@@ -64,5 +64,8 @@
     <ClInclude Include="sun_render.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\sphere.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
