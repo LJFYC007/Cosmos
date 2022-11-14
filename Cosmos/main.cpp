@@ -119,20 +119,23 @@ int main()
 
 	// load shader & textures & meshes
 	// -----------------------------------------------	
+
+	// ------------------ earth ----------------------
 	Resource::LoadShader("earth.vs", "earth.fs", "earth");
-	Resource::LoadShader("sun.vs", "sun.fs", "sun");
-	
 	std::vector<Texture> earthTextures;
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_daymap.jpg", "earth_diffuse", "diffuse"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_specular_map.jpg", "earth_specular", "specular"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/2k_earth_normal_map.png", "earth_normal", "normal"));
-	Resource::LoadTexture("resources/textures/sun.jpg", "sun", "diffuse");
+	Sphere sphere;
+	Resource::LoadMesh(sphere.vertices, sphere.indices, earthTextures, "earth");
+	EarthRenderer earth(Resource::GetShader("earth"), Resource::GetMesh("earth"));
 
-	Sphere earth;
-	Resource::LoadMesh(earth.vertices, earth.indices, earthTextures, "earth");
-
-	EarthRenderer Render(Resource::GetShader("earth"), Resource::GetMesh("earth"));
-	SunRenderer sun(Resource::GetShader("sun"));
+	// ------------------- sun ------------------------
+	Resource::LoadShader("sun.vs", "sun.fs", "sun");
+	std::vector<Texture> sunTextures;
+	sunTextures.push_back(Resource::LoadTexture("resources/textures/sun.jpg", "sun_diffuse", "diffuse"));
+	Resource::LoadMesh(sphere.vertices, sphere.indices, sunTextures, "sun");
+	SunRenderer sun(Resource::GetShader("sun"), Resource::GetMesh("sun"));
 
 	std::cout << "Finish Initialize ---------- Start Rendering" << std::endl;
 
@@ -165,7 +168,7 @@ int main()
 		Resource::GetShader("sun").setMat4("projection", projection);
 		Resource::GetShader("sun").setMat4("view", view);
 
-		Calculate::Render(sun, Render);
+		Calculate::Render(sun, earth);
 
 		// Swap Buffer
 		glfwSwapBuffers(window);

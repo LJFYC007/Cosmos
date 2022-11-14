@@ -3,21 +3,16 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+#include "include/render.h"
 #include "include/shader.h"
 #include "include/mesh.h"
 
-class EarthRenderer
+class EarthRenderer : public Renderer
 {
 public : 
-    EarthRenderer(Shader& otherShader, Mesh& otherMesh);
-    void Draw(glm::vec3 position, GLfloat size = 1.0f);
-
-private : 
-    Shader shader;
-    Mesh mesh;
+    EarthRenderer(Shader& otherShader, Mesh& otherMesh) : Renderer(otherShader, otherMesh) {};
+    void Draw(glm::vec3 position, GLfloat size = 1.0f) override;
 };
-
-EarthRenderer::EarthRenderer(Shader& otherShader, Mesh& otherMesh) { shader = otherShader; mesh = otherMesh; }
 
 void EarthRenderer::Draw(glm::vec3 position, GLfloat size)
 {

@@ -67,5 +67,8 @@
     <ClInclude Include="include\sphere.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\render.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
