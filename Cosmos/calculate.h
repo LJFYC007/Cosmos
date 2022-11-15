@@ -17,7 +17,7 @@ private:
 
 void Calculate::Render(SunRenderer& sun, EarthRenderer& earth, MoonRenderer& moon)
 {
-	earth.Draw(glm::vec3(0.0f, 0.0f, 0.0f));
-	moon.Draw(glm::vec3(-2.0f, 0.0f, -2.0f));
-	sun.Draw(glm::vec3(2.0f,1.0f, -1.0f));
+	earth.Draw(glm::vec3(0.0f, 0.0f, 0.0f), 2.0f);
+	moon.Draw(glm::vec3(-0.5f, 0.3f, 1.5f), 0.273f);
+	// sun.Draw(glm::vec3(2.0f,1.0f, -1.0f));
 }

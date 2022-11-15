@@ -13,7 +13,7 @@ const int NR_POINT_LIGHTS = 1;
 
 struct Material 
 { 
-    sampler2D diffuse, specular, normal;
+    sampler2D diffuse, diffuse_night, specular, normal;
     float shininess;
 };
 uniform Material material;
@@ -31,12 +31,10 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     vec3 halfwayDir = normalize(lightDir + viewDir);
     float diff = max(dot(normal, lightDir), 0.0);
     float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
-    vec3 ambient = light.ambient * vec3(texture(material.diffuse, fs_in.TexCoords));
-    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, fs_in.TexCoords));
+    vec3 diffuse = light.diffuse * diff * (vec3(texture(material.diffuse, fs_in.TexCoords)) + vec3(54.0, 57.0, 81.0) / 255.0);
+    diffuse += (1 - diff) * light.ambient * (vec3(texture(material.diffuse_night, fs_in.TexCoords)));
     vec3 specular = light.specular * spec * vec3(texture(material.specular, fs_in.TexCoords).r);
-    float dis = length(fs_in.TangentLightPos - fs_in.FragPos);
-    float attenuation = 1.0 / (light.constant + light.linear * dis + light.quadratic * (dis * dis));
-    return (ambient + diffuse + specular) * attenuation;
+    return diffuse + specular;
 }
 
 void main()

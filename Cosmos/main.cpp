@@ -82,6 +82,7 @@ int main()
 	Resource::LoadShader("earth.vs", "earth.fs", "earth");
 	std::vector<Texture> earthTextures;
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_day_map.jpg", "earth_diffuse", "diffuse"));
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_night_map.jpg", "earth_diffuse_night", "diffuse_night"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_specular_map.jpg", "earth_specular", "specular"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_normal_map.png", "earth_normal", "normal"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_height_map.jpg", "earth_height", "height"));
@@ -140,13 +141,13 @@ int main()
 		Resource::GetShader("earth").setMat4("projection", projection);
 		Resource::GetShader("earth").setMat4("view", view);
 		Resource::GetShader("earth").setVec3("viewPos", camera.Position);
-		Resource::GetShader("earth").setVec3("lightPos", glm::vec3(2.0f, 1.0f, -8.0f));
+		Resource::GetShader("earth").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 4.0f));
 
 		Resource::GetShader("moon").use();
 		Resource::GetShader("moon").setMat4("projection", projection);
 		Resource::GetShader("moon").setMat4("view", view);
 		Resource::GetShader("moon").setVec3("viewPos", camera.Position);
-		Resource::GetShader("moon").setVec3("lightPos", glm::vec3(2.0f, 1.0f, -8.0f));
+		Resource::GetShader("moon").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 4.0f));
 
 		Resource::GetShader("sun").use();
 		Resource::GetShader("sun").setMat4("projection", projection);
