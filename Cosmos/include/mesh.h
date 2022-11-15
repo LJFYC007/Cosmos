@@ -35,10 +35,11 @@ public :
 		for (unsigned int i = 0; i < textures.size(); ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
-			std::string number, name = textures[i].type;
-			if (name == "diffuse") number = std::to_string(diffuseNr++);
-			else if (name == "specular") number = std::to_string(specularNr++);
-			shader.setInt(("material." + name).c_str(), i);
+			std::string name = textures[i].type;
+			if (name == "height")
+				shader.setInt((name).c_str(), i);
+			else
+				shader.setInt(("material." + name).c_str(), i);
 			textures[i].Bind();
 		}
 

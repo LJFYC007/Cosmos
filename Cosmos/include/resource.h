@@ -12,15 +12,15 @@
 #include "texture.h"
 #include "mesh.h"
 
-class Resource 
+class Resource
 {
-public: 
+public:
 	static std::map<std::string, Shader> Shaders;
 	static std::map<std::string, Texture> Textures;
 	static std::map<std::string, Mesh> Meshes;
 
 	static Shader LoadShader(const char* vertexPath, const char* fragmentPath, std::string name);
-	static Shader& GetShader(std::string name); 
+	static Shader& GetShader(std::string name);
 	static Texture LoadTexture(const char* file, std::string name, std::string type);
 	static Texture GetTexture(std::string name);
 	static Mesh LoadMesh(std::vector<Vertex> vertecies, std::vector<unsigned int> indices, std::vector<Texture> textures, std::string name);
@@ -30,9 +30,9 @@ public:
 		for (auto it : Shaders) glDeleteProgram(it.second.ID);
 		for (auto it : Textures) glDeleteTextures(1, &it.second.ID);
 	}
-		
-private: 
-	Resource(){}
+
+private:
+	Resource() {}
 	static Shader loadShaderFromFile(const char* vertexPath, const char* fragmentPath);
 	static Texture loadTextureFromFile(const char* file, std::string type);
 	static Mesh loadMesh(std::vector<Vertex> vertecies, std::vector<unsigned int> indices, std::vector<Texture> textures);
@@ -78,4 +78,3 @@ Mesh Resource::loadMesh(std::vector<Vertex> vertecies, std::vector<unsigned int>
 	Mesh mesh(vertecies, indices, textures);
 	return mesh;
 }
-

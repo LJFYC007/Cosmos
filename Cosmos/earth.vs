@@ -19,12 +19,15 @@ uniform mat4 projection;
 
 uniform vec3 lightPos;
 uniform vec3 viewPos;
+    
+uniform sampler2D height;
 
 void main()
 {
-    gl_Position = projection * view * model * vec4(aPos, 1.0);
+    vec3 Pos = aPos + 0.03 * texture(height, aTexCoord).x * aNormal;
+    gl_Position = projection * view * model * vec4(Pos, 1.0);
 
-    vs_out.FragPos = vec3(model * vec4(aPos, 1.0));   
+    vs_out.FragPos = vec3(model * vec4(Pos, 1.0));   
     vs_out.TexCoords = aTexCoord;
     
     mat3 normalMatrix = transpose(inverse(mat3(model)));

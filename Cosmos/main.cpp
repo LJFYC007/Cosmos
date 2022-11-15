@@ -126,6 +126,7 @@ int main()
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_day_map.jpg", "earth_diffuse", "diffuse"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_specular_map.jpg", "earth_specular", "specular"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_normal_map.png", "earth_normal", "normal"));
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_height_map.jpg", "earth_height", "height"));
 	Sphere sphere;
 	Resource::LoadMesh(sphere.vertices, sphere.indices, earthTextures, "earth");
 	EarthRenderer earth(Resource::GetShader("earth"), Resource::GetMesh("earth"));
@@ -134,6 +135,7 @@ int main()
 	Resource::LoadShader("moon.vs", "moon.fs", "moon");
 	std::vector<Texture> moonTextures;
 	moonTextures.push_back(Resource::LoadTexture("resources/textures/moon_diffuse_map.jpg", "moon_diffuse", "diffuse"));
+	moonTextures.push_back(Resource::LoadTexture("resources/textures/moon_height_map.jpg", "moon_height", "height"));
 	Resource::LoadMesh(sphere.vertices, sphere.indices, moonTextures, "moon");
 	MoonRenderer moon(Resource::GetShader("moon"), Resource::GetMesh("moon"));
 
