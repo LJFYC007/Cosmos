@@ -84,6 +84,7 @@ int main()
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_day_map.jpg", "earth_diffuse", "diffuse"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_night_map.jpg", "earth_diffuse_night", "diffuse_night"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_specular_map.jpg", "earth_specular", "specular"));
+	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_cloud_map.jpg", "earth_cloud", "cloud"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_normal_map.png", "earth_normal", "normal"));
 	earthTextures.push_back(Resource::LoadTexture("resources/textures/earth_height_map.jpg", "earth_height", "height"));
 	Sphere sphere;

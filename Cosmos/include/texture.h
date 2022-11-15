@@ -21,6 +21,7 @@ public:
 	{
 		type = textureType;
 		unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
+		std::cout << "TEXTURE LOADING ::: " << texturePath << " " << width << " " << height << " " << nrChannels << std::endl;
 		if (data)
 		{
 			GLenum format;

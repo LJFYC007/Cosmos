@@ -33,6 +33,7 @@ void EarthRenderer::Draw(glm::vec3 position, GLfloat size)
     shader.setFloat("pointLights[0].linear", 0.014f);
     shader.setFloat("pointLights[0].quadratic", 0.0007f);
     shader.setFloat("material.shininess", 32.0f);
+    shader.setFloat("cloudtrans", 0.7f);
 
     mesh.Draw(shader);
 }
