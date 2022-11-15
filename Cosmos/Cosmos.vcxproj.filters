@@ -79,5 +79,8 @@
     <ClInclude Include="moon_render.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\debug.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

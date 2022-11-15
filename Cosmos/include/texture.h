@@ -2,6 +2,8 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
+#include "debug.h"
+
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -35,13 +37,14 @@ public:
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-			glBindTexture(GL_TEXTURE20, 0);
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 		else
 		{
 			std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD at path: " << texturePath << std::endl;
 		}
 		stbi_image_free(data);
+		glCheckError();
 	}
 
 	void Bind() { glBindTexture(GL_TEXTURE_2D, ID); }

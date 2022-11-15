@@ -11,6 +11,7 @@
 #include "shader.h"
 #include "texture.h"
 #include "mesh.h"
+#include "debug.h"
 
 class Resource
 {

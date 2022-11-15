@@ -6,6 +6,7 @@
 
 #include "shader.h"
 #include "texture.h"
+#include "debug.h"
 
 #include <string>
 #include <vector>
@@ -27,6 +28,7 @@ public :
 		this->indices = indices;
 		this->textures = textures;
 		setupMesh();
+		glCheckError();
 	}
 
 	void Draw(Shader &shader)
@@ -49,6 +51,7 @@ public :
 		glBindVertexArray(0);
 
 		glActiveTexture(GL_TEXTURE0);
+		glCheckError();
 	}
 private :
 	unsigned int VBO, EBO;
