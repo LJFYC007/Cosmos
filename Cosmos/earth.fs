@@ -28,9 +28,9 @@ uniform PointLight pointLights[NR_POINT_LIGHTS];
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightDir = normalize(fs_in.TangentLightPos - fragPos);
+    vec3 halfwayDir = normalize(lightDir + viewDir);
     float diff = max(dot(normal, lightDir), 0.0);
-    vec3 reflectDir = reflect(-lightDir, normal); 
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+    float spec = pow(max(dot(normal, halfwayDir), 0.0), material.shininess);
     vec3 ambient = light.ambient * vec3(texture(material.diffuse, fs_in.TexCoords));
     vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, fs_in.TexCoords));
     vec3 specular = light.specular * spec * vec3(texture(material.specular, fs_in.TexCoords).r);

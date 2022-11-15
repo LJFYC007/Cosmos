@@ -25,7 +25,7 @@ void EarthRenderer::Draw(glm::vec3 position, GLfloat size)
     shader.setMat4("model", model);
 
     shader.setVec3("pointLights[0].ambient", 0.1f, 0.1f, 0.1f);
-    shader.setVec3("pointLights[0].diffuse", 0.6f, 0.6f, 0.6f);
+    shader.setVec3("pointLights[0].diffuse", 1.0f, 1.0f, 1.0f);
     shader.setVec3("pointLights[0].specular", 0.2f, 0.2f, 0.2f);
     shader.setFloat("pointLights[0].constant", 1.0f);
     shader.setFloat("pointLights[0].linear", 0.014f);
