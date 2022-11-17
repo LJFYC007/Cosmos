@@ -4,17 +4,40 @@ out vec4 FragColor;
 in VS_OUT {
     vec3 FragPos;
     vec2 TexCoords;
-    vec3 TangentLightPos;
-    vec3 TangentViewPos;
-    vec3 TangentFragPos;
-    vec3 TangentNormal;
+    vec3 Normal;
 } fs_in;
+
+struct Material 
+{ 
+    sampler2D normal;
+};
+uniform Material material;
 
 uniform vec3 albedo;
 uniform float metallic;
 uniform float roughness;
 uniform float ao;
+uniform vec3 lightPos;
+uniform vec3 viewPos;
 const float PI = 3.14159265359;
+
+vec3 getNormalFromMap()
+{
+    vec3 tangentNormal = texture(material.normal, fs_in.TexCoords).xyz * 2.0 - 1.0;
+    //vec3 tangentNormal = vec3(0.0, 0.0, 1.0);
+
+    vec3 Q1  = dFdx(fs_in.FragPos);
+    vec3 Q2  = dFdy(fs_in.FragPos);
+    vec2 st1 = dFdx(fs_in.TexCoords);
+    vec2 st2 = dFdy(fs_in.TexCoords);
+
+    vec3 N   = normalize(fs_in.Normal);
+    vec3 T  = normalize(Q1*st2.t - Q2*st1.t);
+    vec3 B  = -normalize(cross(N, T));
+    mat3 TBN = mat3(T, B, N);
+
+    return normalize(TBN * tangentNormal);
+}
 
 vec3 fresnelSchlick(float cosTheta, vec3 F0) { return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0); }  
 
@@ -43,14 +66,14 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 
 void main()
 {
-    vec3 N = normalize(fs_in.TangentNormal), V = normalize(fs_in.TangentViewPos - fs_in.FragPos);
+    vec3 N = getNormalFromMap(), V = normalize(viewPos - fs_in.FragPos);
     vec3 Lo = vec3(0.0);
 
     for ( int i = 0; i < 1; ++ i )
     {
         vec3 lightColor = vec3(300.0);
-        vec3 L = normalize(fs_in.TangentLightPos - fs_in.FragPos), H = normalize(V + L);
-        float distance = length(fs_in.TangentLightPos - fs_in.FragPos), attenuation = 1.0 / (distance * distance);
+        vec3 L = normalize(lightPos - fs_in.FragPos), H = normalize(V + L);
+        float distance = length(lightPos - fs_in.FragPos), attenuation = 1.0 / (distance * distance);
         vec3 radiance = lightColor * attenuation;
 
         vec3 F0 = vec3(0.04); F0 = mix(F0, albedo, metallic);

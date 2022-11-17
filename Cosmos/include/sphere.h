@@ -22,7 +22,7 @@ private:
     glm::vec3 getTanCoord(GLfloat u, GLfloat v) { return glm::vec3(cos(u) * sin(v), cos(u) * cos(v), -sin(u)); }
     glm::vec3 getBitanCoord(GLfloat u, GLfloat v) { return glm::vec3(sin(u) * cos(v), -cos(u) * sin(v), 0); }
     glm::vec3 getPoint(GLfloat u, GLfloat v) ;
-    GLuint getID(GLuint lat, GLuint lon) { return lat * (lons + 1) + lon; }
+    GLuint getID(GLuint lat, GLuint lon) { if(lon == lons) lon = 0; return lat * lons + lon; }
     void createSphere() ;
 };
 
@@ -40,7 +40,7 @@ void Sphere::createSphere() {
     GLuint offset = 0;
 
     for (unsigned int lat = 0; lat <= lats; ++lat)
-        for (unsigned int lon = 0; lon <= lons; ++lon) {
+        for (unsigned int lon = 0; lon < lons; ++lon) {
             Vertex Point;
             Point.Position = getPoint(lat * lat_step, lon * lon_step); 
             Point.Tangent = getTanCoord(lat * lat_step, lon * lon_step); 
@@ -52,13 +52,19 @@ void Sphere::createSphere() {
 
 	for (unsigned int lat = 0; lat < lats; ++lat)
         for (unsigned int lon = 0; lon < lons; ++lon) {
-            // First Triangle
-            indices.push_back(getID(lat, lon));
-            indices.push_back(getID(lat, lon + 1));
-            indices.push_back(getID(lat + 1, lon + 1));
-            // Second Triangle
-            indices.push_back(getID(lat, lon));
-            indices.push_back(getID(lat + 1, lon + 1));
-            indices.push_back(getID(lat + 1, lon));
+            if (lat != 0)
+            {
+				// First Triangle
+				indices.push_back(getID(lat, lon));
+				indices.push_back(getID(lat, lon + 1));
+				indices.push_back(getID(lat + 1, lon + 1));
+            }
+            if (lat != lats - 1)
+            { 
+				// Second Triangle
+				indices.push_back(getID(lat, lon));
+				indices.push_back(getID(lat + 1, lon + 1));
+				indices.push_back(getID(lat + 1, lon));
+            }
         }
 }

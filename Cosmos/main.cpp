@@ -113,6 +113,7 @@ int main()
 	// ------------------ ball -----------------------
 	Resource::LoadShader("ball.vs", "ball.fs", "ball");
 	std::vector<Texture> ballTextures;
+	ballTextures.push_back(Resource::LoadTexture("resources/textures/earth_normal_map.png", "earth_normal", "normal"));
 	Resource::LoadMesh(sphere.vertices, sphere.indices, ballTextures, "ball");
 	BallRenderer ball(Resource::GetShader("ball"), Resource::GetMesh("ball"));
 	glCheckError();
@@ -166,7 +167,7 @@ int main()
 		Resource::GetShader("ball").setMat4("projection", projection);
 		Resource::GetShader("ball").setMat4("view", view);
 		Resource::GetShader("ball").setVec3("viewPos", camera.Position);
-		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 4.0f));
+		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 2.0f));
 
 		ball.Draw(glm::vec3(0.0f, 0.0f, 0.0f));
 		//Calculate::Render(sun, earth, moon);
