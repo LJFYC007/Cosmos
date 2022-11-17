@@ -13,6 +13,7 @@
 #include "include/debug.h"
 #include "earth_render.h"
 #include "sun_render.h"
+#include "ball_render.h"
 #include "calculate.h"
 
 #include <iostream>
@@ -109,6 +110,13 @@ int main()
 	SunRenderer sun(Resource::GetShader("sun"), Resource::GetMesh("sun"));
 	glCheckError();
 
+	// ------------------ ball -----------------------
+	Resource::LoadShader("ball.vs", "ball.fs", "ball");
+	std::vector<Texture> ballTextures;
+	Resource::LoadMesh(sphere.vertices, sphere.indices, ballTextures, "ball");
+	BallRenderer ball(Resource::GetShader("ball"), Resource::GetMesh("ball"));
+	glCheckError();
+
 	std::cout << "Finish Initialize ---------- Start Rendering" << std::endl;
 
 	// render loop
@@ -132,7 +140,7 @@ int main()
 
 		// Render
 		// ------
-		glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // alpha : 不透明度
+		glClearColor(0.1f, 0.1f, 0.1f, 1.0f); // alpha : transparancy
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		glm::mat4 projection = glm::perspective(glm::radians(camera.Zoom), (float)screenWidth / (float)screenHeight, 0.01f, 100.0f);
@@ -154,7 +162,14 @@ int main()
 		Resource::GetShader("sun").setMat4("projection", projection);
 		Resource::GetShader("sun").setMat4("view", view);
 
-		Calculate::Render(sun, earth, moon);
+		Resource::GetShader("ball").use();
+		Resource::GetShader("ball").setMat4("projection", projection);
+		Resource::GetShader("ball").setMat4("view", view);
+		Resource::GetShader("ball").setVec3("viewPos", camera.Position);
+		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 4.0f));
+
+		ball.Draw(glm::vec3(0.0f, 0.0f, 0.0f));
+		//Calculate::Render(sun, earth, moon);
 
 		// Swap Buffer
 		glfwSwapBuffers(window);

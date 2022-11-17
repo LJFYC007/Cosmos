@@ -44,6 +44,12 @@
     <None Include="moon.vs">
       <Filter>Source Files</Filter>
     </None>
+    <None Include="ball.fs">
+      <Filter>Source Files</Filter>
+    </None>
+    <None Include="ball.vs">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\camera.h">
@@ -81,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="include\debug.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ball_render.h">
+      <Filter>Source Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
