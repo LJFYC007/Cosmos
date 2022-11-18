@@ -44,6 +44,7 @@ std::map<std::string, Shader> Resource::Shaders;
 std::map<std::string, Mesh> Resource::Meshes;
 
 Shader Resource::LoadShader(const char* vertexPath, const char* fragmentPath, std::string name) {
+	glCheckError();
 	Shaders[name] = loadShaderFromFile(vertexPath, fragmentPath);
 	return Shaders[name];
 }

@@ -143,10 +143,16 @@
     <ClCompile Include="init.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="background.fs" />
+    <None Include="background.vs" />
     <None Include="ball.fs" />
     <None Include="ball.vs" />
     <None Include="earth.fs" />
     <None Include="earth.vs" />
+    <None Include="hdr.fs" />
+    <None Include="hdr.vs" />
+    <None Include="irr.fs" />
+    <None Include="irr.vs" />
     <None Include="moon.fs" />
     <None Include="moon.vs" />
     <None Include="sun.fs" />

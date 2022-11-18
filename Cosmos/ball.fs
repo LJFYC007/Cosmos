@@ -12,6 +12,7 @@ struct Material
     sampler2D normal;
 };
 uniform Material material;
+uniform samplerCube irradianceMap;
 
 uniform vec3 albedo;
 uniform float metallic;
@@ -67,7 +68,7 @@ float GeometrySmith(vec3 N, vec3 V, vec3 L, float roughness)
 void main()
 {
     vec3 N = getNormalFromMap(), V = normalize(viewPos - fs_in.FragPos);
-    vec3 Lo = vec3(0.0);
+    vec3 Lo = vec3(0.0), F0 = vec3(0.04); F0 = mix(F0, albedo, metallic);
 
     for ( int i = 0; i < 1; ++ i )
     {
@@ -76,7 +77,6 @@ void main()
         float distance = length(lightPos - fs_in.FragPos), attenuation = 1.0 / (distance * distance);
         vec3 radiance = lightColor * attenuation;
 
-        vec3 F0 = vec3(0.04); F0 = mix(F0, albedo, metallic);
 		vec3 F = fresnelSchlick(max(dot(H, V), 0.0), F0);
  
         float NDF = DistributionGGX(N, H, roughness), G = GeometrySmith(N, V, L, roughness);      
@@ -89,7 +89,13 @@ void main()
         Lo += (kD * albedo / PI + specular) * radiance * NdotL;
     }
 
-    vec3 ambient = vec3(0.03) * albedo * ao;
+    vec3 kS = fresnelSchlick(max(dot(N, V), 0.0), F0);
+    vec3 kD = 1.0 - kS;
+    kD *= 1.0 - metallic;	  
+    vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 diffuse      = irradiance * albedo;
+    vec3 ambient = (kD * diffuse) * ao;
+
 	vec3 color = ambient + Lo;  
 
     color = color / (color + vec3(1.0));
