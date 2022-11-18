@@ -100,73 +100,46 @@ int main()
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
 
-	// setup environment cubemap
-	unsigned int envCubemap;
-	glGenTextures(1, &envCubemap);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
-	for (unsigned int i = 0; i < 6; ++i)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
 	// start render hdr map
+	Resource::LoadTexture("", "envCubemap", "cubemap");
 	Resource::LoadTexture("resources/hdr/newport_loft.hdr", "hdrTexture", "hdr");
 	Resource::LoadShader("hdr.vs", "hdr.fs", "hdr");
 	Resource::GetShader("hdr").use();
 	Resource::GetShader("hdr").setInt("hdrMap", 0);
 	Resource::GetShader("hdr").setMat4("projection", captureProjection);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, Resource::GetTexture("hdrTexture").ID);
+	Resource::GetTexture("hdrTexture").Bind();
 
 	glViewport(0, 0, 512, 512);
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	for (unsigned int i = 0; i < 6; ++i)
 	{
 		Resource::GetShader("hdr").setMat4("view", captureViews[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, envCubemap, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, Resource::GetTexture("envCubemap").ID, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderCube();
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	// setup irradiance cubemap
-	unsigned int irradianceCubemap;
-	glGenTextures(1, &irradianceCubemap);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceCubemap);
-	for (unsigned int i = 0; i < 6; ++i)
-		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
-	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, 512, 512);
-
 	// start render irradiance map
+	Resource::LoadTexture("", "irrCubemap", "cubemap");
 	Resource::LoadShader("irr.vs", "irr.fs", "irr");
 	Resource::GetShader("irr").use();
 	Resource::GetShader("irr").setInt("environmentMap", 0);
 	Resource::GetShader("irr").setMat4("projection", captureProjection);
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+	Resource::GetTexture("envCubemap").Bind();
 
 	glViewport(0, 0, 512, 512);
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	for (unsigned int i = 0; i < 6; ++i)
 	{
 		Resource::GetShader("irr").setMat4("view", captureViews[i]);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, irradianceCubemap, 0);
+		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, Resource::GetTexture("irrCubemap").ID, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		renderCube();
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 
 	// load shader & textures & meshes
 	// -----------------------------------------------	
@@ -208,12 +181,11 @@ int main()
 	Resource::LoadShader("ball.vs", "ball.fs", "ball");
 	std::vector<Texture> ballTextures;
 	ballTextures.push_back(Resource::LoadTexture("resources/textures/earth_normal_map.png", "earth_normal", "normal"));
+	ballTextures.push_back(Resource::GetTexture("irrCubemap"));
 	Resource::LoadMesh(sphere.vertices, sphere.indices, ballTextures, "ball");
 	BallRenderer ball(Resource::GetShader("ball"), Resource::GetMesh("ball"));
 
 	Resource::LoadShader("background.vs", "background.fs", "background");
-	Resource::GetShader("background").use();
-	Resource::GetShader("background").setInt("environmentMap", 0);
 
 	// finish initialize
 	// -----------------------------------------------	
@@ -273,9 +245,6 @@ int main()
 		Resource::GetShader("ball").setMat4("view", view);
 		Resource::GetShader("ball").setVec3("viewPos", camera.Position);
 		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 2.0f));
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, irradianceCubemap);
-		Resource::GetShader("ball").setInt("irradianceMap", 1);
 
 		ball.Draw(glm::vec3(0.2f, 0.2f, 2.7f), 0.1f);
 
@@ -283,7 +252,8 @@ int main()
 		Resource::GetShader("background").setMat4("view", view);
 		Resource::GetShader("background").setMat4("projection", projection);
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_CUBE_MAP, envCubemap);
+		Resource::GetShader("background").setInt("environmentMap", 0);
+		Resource::GetTexture("envCubemap").Bind();
 		renderCube();
 
 		// Swap Buffer

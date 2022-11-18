@@ -7,12 +7,8 @@ in VS_OUT {
     vec3 Normal;
 } fs_in;
 
-struct Material 
-{ 
-    sampler2D normal;
-};
-uniform Material material;
-uniform samplerCube irradianceMap;
+uniform samplerCube cubemap;
+uniform sampler2D normal;
 
 uniform vec3 albedo;
 uniform float metallic;
@@ -24,8 +20,7 @@ const float PI = 3.14159265359;
 
 vec3 getNormalFromMap()
 {
-    vec3 tangentNormal = texture(material.normal, fs_in.TexCoords).xyz * 2.0 - 1.0;
-    //vec3 tangentNormal = vec3(0.0, 0.0, 1.0);
+    vec3 tangentNormal = texture(normal, fs_in.TexCoords).xyz * 2.0 - 1.0;
 
     vec3 Q1  = dFdx(fs_in.FragPos);
     vec3 Q2  = dFdy(fs_in.FragPos);
@@ -92,7 +87,7 @@ void main()
     vec3 kS = fresnelSchlick(max(dot(N, V), 0.0), F0);
     vec3 kD = 1.0 - kS;
     kD *= 1.0 - metallic;	  
-    vec3 irradiance = texture(irradianceMap, N).rgb;
+    vec3 irradiance = texture(cubemap, N).rgb;
     vec3 diffuse      = irradiance * albedo;
     vec3 ambient = (kD * diffuse) * ao;
 

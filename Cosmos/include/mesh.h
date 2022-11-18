@@ -33,15 +33,11 @@ public :
 
 	void Draw(Shader &shader)
 	{
-		unsigned int diffuseNr = 1, specularNr = 1;
 		for (unsigned int i = 0; i < textures.size(); ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			std::string name = textures[i].type;
-			if (name == "height")
-				shader.setInt((name).c_str(), i);
-			else
-				shader.setInt(("material." + name).c_str(), i);
+			shader.setInt((name).c_str(), i);
 			textures[i].Bind();
 		}
 

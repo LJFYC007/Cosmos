@@ -23,7 +23,7 @@ public:
 	static Shader LoadShader(const char* vertexPath, const char* fragmentPath, std::string name);
 	static Shader& GetShader(std::string name);
 	static Texture LoadTexture(const char* file, std::string name, std::string type);
-	static Texture GetTexture(std::string name);
+	static Texture& GetTexture(std::string name);
 	static Mesh LoadMesh(std::vector<Vertex> vertecies, std::vector<unsigned int> indices, std::vector<Texture> textures, std::string name);
 	static Mesh& GetMesh(std::string name);
 	static void Clear()
@@ -44,7 +44,6 @@ std::map<std::string, Shader> Resource::Shaders;
 std::map<std::string, Mesh> Resource::Meshes;
 
 Shader Resource::LoadShader(const char* vertexPath, const char* fragmentPath, std::string name) {
-	glCheckError();
 	Shaders[name] = loadShaderFromFile(vertexPath, fragmentPath);
 	return Shaders[name];
 }
@@ -59,7 +58,7 @@ Mesh Resource::LoadMesh(std::vector<Vertex> vertecies, std::vector<unsigned int>
 	return Meshes[name];
 }
 Shader& Resource::GetShader(std::string name) { return Shaders[name]; }
-Texture Resource::GetTexture(std::string name) { return Textures[name]; }
+Texture& Resource::GetTexture(std::string name) { return Textures[name]; }
 Mesh& Resource::GetMesh(std::string name) { return Meshes[name]; }
 
 Shader Resource::loadShaderFromFile(const char* vertexPath, const char* fragmentPath)
@@ -71,7 +70,8 @@ Shader Resource::loadShaderFromFile(const char* vertexPath, const char* fragment
 Texture Resource::loadTextureFromFile(const char* file, std::string type)
 {
 	Texture texture;
-	texture.Generate(file, type);
+	if (type == "cubemap") texture.GenerateCubemap();
+	else texture.Generate(file, type);
 	return texture;
 }
 
