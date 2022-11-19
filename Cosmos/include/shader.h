@@ -14,7 +14,7 @@ public :
 	unsigned int ID;
 
 	Shader() { ID = 0; }
-	Shader(const char* vertexPath, const char* fragmentPath)
+	Shader(std::string vertexPath, std::string fragmentPath)
 	{
 		// retrieve the vertex & fragment source code from filepath
 		// -----------------------------------------------	

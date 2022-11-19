@@ -20,9 +20,9 @@ public:
 	static std::map<std::string, Texture> Textures;
 	static std::map<std::string, Mesh> Meshes;
 
-	static Shader LoadShader(const char* vertexPath, const char* fragmentPath, std::string name);
+	static Shader LoadShader(std::string vertexPath, std::string fragmentPath, std::string name);
 	static Shader& GetShader(std::string name);
-	static Texture LoadTexture(const char* file, std::string name, std::string type);
+	static Texture LoadTexture(std::string file, std::string name, std::string type);
 	static Texture& GetTexture(std::string name);
 	static Mesh LoadMesh(std::vector<Vertex> vertecies, std::vector<unsigned int> indices, std::vector<Texture> textures, std::string name);
 	static Mesh& GetMesh(std::string name);
@@ -34,8 +34,8 @@ public:
 
 private:
 	Resource() {}
-	static Shader loadShaderFromFile(const char* vertexPath, const char* fragmentPath);
-	static Texture loadTextureFromFile(const char* file, std::string type);
+	static Shader loadShaderFromFile(std::string vertexPath, std::string fragmentPath);
+	static Texture loadTextureFromFile(std::string file, std::string type);
 	static Mesh loadMesh(std::vector<Vertex> vertecies, std::vector<unsigned int> indices, std::vector<Texture> textures);
 };
 
@@ -43,11 +43,11 @@ std::map<std::string, Texture> Resource::Textures;
 std::map<std::string, Shader> Resource::Shaders;
 std::map<std::string, Mesh> Resource::Meshes;
 
-Shader Resource::LoadShader(const char* vertexPath, const char* fragmentPath, std::string name) {
-	Shaders[name] = loadShaderFromFile(vertexPath, fragmentPath);
+Shader Resource::LoadShader(std::string vertexPath, std::string fragmentPath, std::string name) {
+	Shaders[name] = loadShaderFromFile("shaders/" + vertexPath, "shaders/" + fragmentPath);
 	return Shaders[name];
 }
-Texture Resource::LoadTexture(const char* file, std::string name, std::string type)
+Texture Resource::LoadTexture(std::string file, std::string name, std::string type)
 {
 	Textures[name] = loadTextureFromFile(file, type);
 	return Textures[name];
@@ -61,13 +61,13 @@ Shader& Resource::GetShader(std::string name) { return Shaders[name]; }
 Texture& Resource::GetTexture(std::string name) { return Textures[name]; }
 Mesh& Resource::GetMesh(std::string name) { return Meshes[name]; }
 
-Shader Resource::loadShaderFromFile(const char* vertexPath, const char* fragmentPath)
+Shader Resource::loadShaderFromFile(std::string vertexPath, std::string fragmentPath)
 {
 	Shader shader(vertexPath, fragmentPath);
 	return shader;
 }
 
-Texture Resource::loadTextureFromFile(const char* file, std::string type)
+Texture Resource::loadTextureFromFile(std::string file, std::string type)
 {
 	Texture texture;
 	texture.Generate(file, type);

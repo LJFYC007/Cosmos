@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\shaders">
+      <UniqueIdentifier>{47691ba4-b5bd-4b87-ad18-75bbddd8396a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -24,50 +27,6 @@
     <ClCompile Include="init.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="earth.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="earth.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="sun.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="sun.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="moon.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="moon.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="ball.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="ball.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="hdr.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="hdr.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="irr.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="irr.vs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="background.fs">
-      <Filter>Source Files</Filter>
-    </None>
-    <None Include="background.vs">
-      <Filter>Source Files</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\camera.h">
@@ -109,5 +68,49 @@
     <ClInclude Include="ball_render.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\ball.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\ball.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\earth.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\earth.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\hdr.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\hdr.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\irr.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\irr.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\moon.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\moon.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\sun.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\sun.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\background.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\background.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

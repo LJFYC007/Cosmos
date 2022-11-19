@@ -17,14 +17,14 @@ public:
 	std::string type;
 	Texture() : width(0), height(0), nrChannels(0) { glGenTextures(1, &ID); }
 		
-	void Generate(const char* texturePath, std::string textureType) 
+	void Generate(std::string texturePath, std::string textureType) 
 	{
 		type = textureType;
 		std::cout << "TEXTURE LOADING ::: Type ::: " << textureType << " ::: Path :::" << texturePath << " " << width << " " << height << " " << nrChannels << std::endl;
 		if (type == "hdr")
 		{
 			stbi_set_flip_vertically_on_load(true);
-			float* data = stbi_loadf(texturePath, &width, &height, &nrChannels, 0);
+			float* data = stbi_loadf(texturePath.c_str(), &width, &height, &nrChannels, 0);
 			if (data)
 			{
 				glBindTexture(GL_TEXTURE_2D, ID);
@@ -58,7 +58,7 @@ public:
 		else
 		{ 
 			stbi_set_flip_vertically_on_load(false);
-			unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
+			unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
 			if (data)
 			{
 				GLenum format;

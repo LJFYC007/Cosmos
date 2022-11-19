@@ -143,22 +143,6 @@
     <ClCompile Include="init.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="background.fs" />
-    <None Include="background.vs" />
-    <None Include="ball.fs" />
-    <None Include="ball.vs" />
-    <None Include="earth.fs" />
-    <None Include="earth.vs" />
-    <None Include="hdr.fs" />
-    <None Include="hdr.vs" />
-    <None Include="irr.fs" />
-    <None Include="irr.vs" />
-    <None Include="moon.fs" />
-    <None Include="moon.vs" />
-    <None Include="sun.fs" />
-    <None Include="sun.vs" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="ball_render.h" />
     <ClInclude Include="calculate.h" />
     <ClInclude Include="earth_render.h" />
@@ -172,6 +156,22 @@
     <ClInclude Include="include\texture.h" />
     <ClInclude Include="moon_render.h" />
     <ClInclude Include="sun_render.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\background.fs" />
+    <None Include="shaders\background.vs" />
+    <None Include="shaders\ball.fs" />
+    <None Include="shaders\ball.vs" />
+    <None Include="shaders\earth.fs" />
+    <None Include="shaders\earth.vs" />
+    <None Include="shaders\hdr.fs" />
+    <None Include="shaders\hdr.vs" />
+    <None Include="shaders\irr.fs" />
+    <None Include="shaders\irr.vs" />
+    <None Include="shaders\moon.fs" />
+    <None Include="shaders\moon.vs" />
+    <None Include="shaders\sun.fs" />
+    <None Include="shaders\sun.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
