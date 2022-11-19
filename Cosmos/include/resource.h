@@ -70,8 +70,7 @@ Shader Resource::loadShaderFromFile(const char* vertexPath, const char* fragment
 Texture Resource::loadTextureFromFile(const char* file, std::string type)
 {
 	Texture texture;
-	if (type == "cubemap") texture.GenerateCubemap();
-	else texture.Generate(file, type);
+	texture.Generate(file, type);
 	return texture;
 }
 

@@ -16,28 +16,15 @@ public:
 	int width, height, nrChannels;
 	std::string type;
 	Texture() : width(0), height(0), nrChannels(0) { glGenTextures(1, &ID); }
-
-	void GenerateCubemap()
-	{
-		type = "cubemap";
-		glBindTexture(GL_TEXTURE_CUBE_MAP, ID);
-		for (unsigned int i = 0; i < 6; ++i)
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	}
 		
 	void Generate(const char* texturePath, std::string textureType) 
 	{
 		type = textureType;
+		std::cout << "TEXTURE LOADING ::: Type ::: " << textureType << " ::: Path :::" << texturePath << " " << width << " " << height << " " << nrChannels << std::endl;
 		if (type == "hdr")
 		{
 			stbi_set_flip_vertically_on_load(true);
 			float* data = stbi_loadf(texturePath, &width, &height, &nrChannels, 0);
-			std::cout << "TEXTURE LOADING ::: " << texturePath << " " << width << " " << height << " " << nrChannels << std::endl;
 			if (data)
 			{
 				glBindTexture(GL_TEXTURE_2D, ID);
@@ -56,11 +43,22 @@ public:
 			}
 			stbi_image_free(data);
 		}
+		else if (type == "cubemap")
+		{
+			glBindTexture(GL_TEXTURE_CUBE_MAP, ID);
+			for (unsigned int i = 0; i < 6; ++i)
+				glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGB16F, 512, 512, 0, GL_RGB, GL_FLOAT, nullptr);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		}
 		else
 		{ 
 			stbi_set_flip_vertically_on_load(false);
 			unsigned char* data = stbi_load(texturePath, &width, &height, &nrChannels, 0);
-			std::cout << "TEXTURE LOADING ::: " << texturePath << " " << width << " " << height << " " << nrChannels << std::endl;
 			if (data)
 			{
 				GLenum format;

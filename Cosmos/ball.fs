@@ -16,6 +16,7 @@ uniform float roughness;
 uniform float ao;
 uniform vec3 lightPos;
 uniform vec3 viewPos;
+
 const float PI = 3.14159265359;
 
 vec3 getNormalFromMap()
