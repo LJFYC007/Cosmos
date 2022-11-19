@@ -7,10 +7,10 @@ in VS_OUT {
     vec3 Normal;
 } fs_in;
 
-uniform samplerCube cubemap;
 uniform sampler2D normal;
-uniform samplerCube prefilterMap;
-uniform sampler2D brdfLUT;
+uniform samplerCube cubemap;
+uniform samplerCube cubemap2;
+uniform sampler2D brdf;
 
 uniform vec3 albedo;
 uniform float metallic;
@@ -75,7 +75,7 @@ void main()
 
     for ( int i = 0; i < 1; ++ i )
     {
-        vec3 lightColor = vec3(300.0);
+        vec3 lightColor = vec3(100.0);
         vec3 L = normalize(lightPos - fs_in.FragPos), H = normalize(V + L);
         float distance = length(lightPos - fs_in.FragPos), attenuation = 1.0 / (distance * distance);
         vec3 radiance = lightColor * attenuation;
@@ -101,8 +101,8 @@ void main()
     vec3 diffuse      = irradiance * albedo;
 
     const float MAX_REFLECTION_LOD = 4.0;
-    vec3 prefilteredColor = textureLod(prefilterMap, R,  roughness * MAX_REFLECTION_LOD).rgb;    
-    vec2 brdf  = texture(brdfLUT, vec2(max(dot(N, V), 0.0), roughness)).rg;
+    vec3 prefilteredColor = textureLod(cubemap2, R,  roughness * MAX_REFLECTION_LOD).rgb;    
+    vec2 brdf  = texture(brdf, vec2(max(dot(N, V), 0.0), roughness)).rg;
     vec3 specular = prefilteredColor * (F * brdf.x + brdf.y);
 
     vec3 ambient = (kD * diffuse + specular) * ao;

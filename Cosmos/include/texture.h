@@ -24,24 +24,19 @@ public:
 		if (type == "hdr")
 		{
 			stbi_set_flip_vertically_on_load(true);
+			glBindTexture(GL_TEXTURE_2D, ID);
 			float* data = stbi_loadf(texturePath.c_str(), &width, &height, &nrChannels, 0);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
 			if (data)
-			{
-				glBindTexture(GL_TEXTURE_2D, ID);
-				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB16F, width, height, 0, GL_RGB, GL_FLOAT, data);
-
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-				glBindTexture(GL_TEXTURE_2D, 0);
-			}
+				stbi_image_free(data);
 			else
-			{
 				std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD at path: " << texturePath << std::endl;
-			}
-			stbi_image_free(data);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
+			stbi_set_flip_vertically_on_load(false);
 		}
 		else if (type == "cubemap")
 		{
@@ -51,37 +46,43 @@ public:
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 			glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-			//glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+			glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+		}
+		else if (type == "brdf")
+		{
+			glBindTexture(GL_TEXTURE_2D, ID);
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RG16F, 512, 512, 0, GL_RG, GL_FLOAT, 0);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 		else
 		{ 
-			stbi_set_flip_vertically_on_load(false);
 			unsigned char* data = stbi_load(texturePath.c_str(), &width, &height, &nrChannels, 0);
+			glBindTexture(GL_TEXTURE_2D, ID);
+
+			GLenum format;
+			if (nrChannels == 1) format = GL_RED;
+			if (nrChannels == 3) format = GL_RGB;
+			if (nrChannels == 4) format = GL_RGBA;
+			glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
+
 			if (data)
 			{
-				GLenum format;
-				if (nrChannels == 1) format = GL_RED;
-				if (nrChannels == 3) format = GL_RGB;
-				if (nrChannels == 4) format = GL_RGBA;
-
-				glBindTexture(GL_TEXTURE_2D, ID);
-				glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
 				glGenerateMipmap(GL_TEXTURE_2D);
-
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-				glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-				glBindTexture(GL_TEXTURE_2D, 0);
+				stbi_image_free(data);
 			}
 			else
-			{
 				std::cout << "ERROR::TEXTURE::FAILED_TO_LOAD at path: " << texturePath << std::endl;
-			}
-			stbi_image_free(data);
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+			glBindTexture(GL_TEXTURE_2D, 0);
 		}
 		glCheckError();
 	}
@@ -92,5 +93,11 @@ public:
 		else glBindTexture(GL_TEXTURE_2D, ID); 
 	}
 
+	void GenerateMipmap()
+	{
+		glBindTexture(GL_TEXTURE_CUBE_MAP, ID);
+		glGenerateMipmap(GL_TEXTURE_CUBE_MAP);
+		glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	}
 };
 

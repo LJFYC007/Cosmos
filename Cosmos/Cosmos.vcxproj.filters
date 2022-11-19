@@ -68,6 +68,9 @@
     <ClInclude Include="ball_render.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\cube.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\ball.fs">

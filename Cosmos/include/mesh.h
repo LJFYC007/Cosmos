@@ -33,11 +33,17 @@ public :
 
 	void Draw(Shader &shader)
 	{
+		unsigned int cubemapNr = 0;
 		for (unsigned int i = 0; i < textures.size(); ++i)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			std::string name = textures[i].type;
-			shader.setInt((name).c_str(), i);
+			if (name == "cubemap")
+			{
+				++cubemapNr;
+				shader.setInt((name + (cubemapNr > 1 ? std::to_string(cubemapNr) : "")).c_str(), i);
+			}
+			else shader.setInt((name).c_str(), i);
 			textures[i].Bind();
 		}
 

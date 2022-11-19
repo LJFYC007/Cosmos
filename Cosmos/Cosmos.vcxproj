@@ -147,6 +147,7 @@
     <ClInclude Include="calculate.h" />
     <ClInclude Include="earth_render.h" />
     <ClInclude Include="include\camera.h" />
+    <ClInclude Include="include\cube.h" />
     <ClInclude Include="include\debug.h" />
     <ClInclude Include="include\mesh.h" />
     <ClInclude Include="include\render.h" />
