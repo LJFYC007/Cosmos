@@ -112,5 +112,17 @@
     <None Include="shaders\background.vs">
       <Filter>Source Files\shaders</Filter>
     </None>
+    <None Include="shaders\prefilter.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\prefilter.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\brdf.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\brdf.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

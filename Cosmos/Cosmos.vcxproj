@@ -162,6 +162,8 @@
     <None Include="shaders\background.vs" />
     <None Include="shaders\ball.fs" />
     <None Include="shaders\ball.vs" />
+    <None Include="shaders\brdf.fs" />
+    <None Include="shaders\brdf.vs" />
     <None Include="shaders\earth.fs" />
     <None Include="shaders\earth.vs" />
     <None Include="shaders\hdr.fs" />
@@ -170,6 +172,8 @@
     <None Include="shaders\irr.vs" />
     <None Include="shaders\moon.fs" />
     <None Include="shaders\moon.vs" />
+    <None Include="shaders\prefilter.fs" />
+    <None Include="shaders\prefilter.vs" />
     <None Include="shaders\sun.fs" />
     <None Include="shaders\sun.vs" />
   </ItemGroup>
