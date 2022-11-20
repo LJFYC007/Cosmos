@@ -2,7 +2,7 @@
 out vec4 FragColor;
 in vec3 WorldPos;
 
-uniform samplerCube environmentMap;
+uniform samplerCube cubemap;
 uniform float roughness;
 
 const float PI = 3.14159265359;
@@ -95,7 +95,7 @@ void main()
 
             float mipLevel = roughness == 0.0 ? 0.0 : 0.5 * log2(saSample / saTexel); 
             
-            prefilteredColor += textureLod(environmentMap, L, mipLevel).rgb * NdotL;
+            prefilteredColor += textureLod(cubemap, L, mipLevel).rgb * NdotL;
             totalWeight      += NdotL;
         }
     }

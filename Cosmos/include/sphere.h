@@ -43,8 +43,8 @@ void Sphere::createSphere() {
         for (unsigned int lon = 0; lon < lons; ++lon) {
             Vertex Point;
             Point.Position = getPoint(lat * lat_step, lon * lon_step); 
-            Point.Tangent = getTanCoord(lat * lat_step, lon * lon_step); 
-            Point.Bitangent = getBitanCoord(lat * lat_step, lon * lon_step);
+            // Point.Tangent = getTanCoord(lat * lat_step, lon * lon_step); 
+            // Point.Bitangent = getBitanCoord(lat * lat_step, lon * lon_step);
             Point.Normal = getPoint(lat * lat_step, lon * lon_step); 
             Point.TexCoords = getTexCoord(lat * lat_step, lon * lon_step);
             vertices.push_back(Point);

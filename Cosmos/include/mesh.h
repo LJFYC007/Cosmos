@@ -11,7 +11,8 @@
 #include <string>
 #include <vector>
 
-struct Vertex { glm::vec3 Position, Tangent, Bitangent, Normal; glm::vec2 TexCoords; };
+// struct Vertex { glm::vec3 Position, Tangent, Bitangent, Normal; glm::vec2 TexCoords; };
+struct Vertex { glm::vec3 Position, Normal; glm::vec2 TexCoords; };
 
 class Mesh
 {
@@ -72,6 +73,11 @@ private :
 		glBindVertexArray(VAO);
 		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
 		glEnableVertexAttribArray(0);
+		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Normal));
+		glEnableVertexAttribArray(1);
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
+		glEnableVertexAttribArray(2);
+		/*
 		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Tangent));
 		glEnableVertexAttribArray(1);
 		glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, Bitangent));
@@ -80,6 +86,7 @@ private :
 		glEnableVertexAttribArray(3);
 		glVertexAttribPointer(4, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, TexCoords));
 		glEnableVertexAttribArray(4);
+		*/
 
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 		glBindVertexArray(0);

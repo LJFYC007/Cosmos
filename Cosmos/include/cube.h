@@ -21,7 +21,7 @@ private:
 };
 
 void Cube::createCube() {
-	float vertices[] = {
+	float vertices1[] = {
 		// back face
 		-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
 		 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
@@ -65,19 +65,13 @@ void Cube::createCube() {
 		 -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
 		 -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
 	};
-
-	glGenVertexArrays(1, &cubeVAO);
-	glGenBuffers(1, &cubeVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-
-	glBindVertexArray(cubeVAO);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindVertexArray(0);
+	for (unsigned int i = 0; i < 36; ++i)
+	{
+		Vertex point;
+		point.Position = glm::vec3(vertices1[8 * i], vertices1[8 * i + 1], vertices1[8 * i + 2]);
+		point.Normal = glm::vec3(vertices1[8 * i + 3], vertices1[8 * i + 4], vertices1[8 * i + 5]);
+		point.TexCoords = glm::vec2(vertices1[8 * i + 6], vertices1[8 * i + 7]);
+		vertices.push_back(point);
+		indices.push_back(i);
+	}
 }

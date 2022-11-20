@@ -10,6 +10,7 @@
 #include "include/resource.h"
 #include "include/texture.h"
 #include "include/sphere.h"
+#include "include/cube.h"
 #include "include/debug.h"
 #include "ball_render.h"
 #include "calculate.h"
@@ -37,13 +38,13 @@ int fpsFrames = 0;
 
 // standard objects
 Sphere sphere;
+Cube cube;
 
 // frame settings
 void framebuffer_size_callback(GLFWwindow * window, int width, int height);
 void processInput(GLFWwindow * window);
 void mouse_callback(GLFWwindow * window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow * window, double xoffset, double yoffset);
-void renderCube();
 void renderQuad();
 
 int main()
@@ -106,43 +107,42 @@ int main()
 
 	// start render hdr map
 	Resource::LoadTexture("", "envCubemap", "cubemap");
-	Resource::LoadTexture("resources/hdr/newport_loft.hdr", "hdrTexture", "hdr");
+	std::vector<Texture> hdrTextures;
+	hdrTextures.push_back(Resource::LoadTexture("resources/hdr/newport_loft.hdr", "hdrTexture", "hdr"));
 	Resource::LoadShader("hdr.vs", "hdr.fs", "hdr");
-	Resource::GetShader("hdr").use();
-	Resource::GetShader("hdr").setInt("hdrMap", 0);
-	Resource::GetShader("hdr").setMat4("projection", captureProjection);
-	glActiveTexture(GL_TEXTURE0);
-	Resource::GetTexture("hdrTexture").Bind();
+	Resource::LoadMesh(cube.vertices, cube.indices, hdrTextures, "hdr");
 
 	glViewport(0, 0, 512, 512);
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	for (unsigned int i = 0; i < 6; ++i)
 	{
+		Resource::GetShader("hdr").use();
 		Resource::GetShader("hdr").setMat4("view", captureViews[i]);
+		Resource::GetShader("hdr").setMat4("projection", captureProjection);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, Resource::GetTexture("envCubemap").ID, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderCube();
+		Resource::GetMesh("hdr").Draw(Resource::GetShader("hdr"));
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	Resource::GetTexture("envCubemap").GenerateMipmap();
 
 	// start render irradiance map
 	Resource::LoadTexture("", "irrCubemap", "cubemap");
+	std::vector<Texture> envCubemaps;
+	envCubemaps.push_back(Resource::GetTexture("envCubemap"));
 	Resource::LoadShader("irr.vs", "irr.fs", "irr");
-	Resource::GetShader("irr").use();
-	Resource::GetShader("irr").setInt("environmentMap", 0);
-	Resource::GetShader("irr").setMat4("projection", captureProjection);
-	glActiveTexture(GL_TEXTURE0);
-	Resource::GetTexture("envCubemap").Bind();
+	Resource::LoadMesh(cube.vertices, cube.indices, envCubemaps, "irr");
 
 	glViewport(0, 0, 512, 512);
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	for (unsigned int i = 0; i < 6; ++i)
 	{
+		Resource::GetShader("irr").use();
+		Resource::GetShader("irr").setMat4("projection", captureProjection);
 		Resource::GetShader("irr").setMat4("view", captureViews[i]);
 		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, Resource::GetTexture("irrCubemap").ID, 0);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		renderCube();
+		Resource::GetMesh("irr").Draw(Resource::GetShader("irr"));
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	Resource::GetTexture("irrCubemap").GenerateMipmap();
@@ -151,11 +151,7 @@ int main()
 	Resource::LoadTexture("", "prefilterCubemap", "cubemap");
 	Resource::GetTexture("prefilterCubemap").GenerateMipmap();
 	Resource::LoadShader("prefilter.vs", "prefilter.fs", "prefilter");
-	Resource::GetShader("prefilter").use();
-	Resource::GetShader("prefilter").setInt("environmentMap", 0);
-	Resource::GetShader("prefilter").setMat4("projection", captureProjection);
-	glActiveTexture(GL_TEXTURE0);
-	Resource::GetTexture("envCubemap").Bind();
+	Resource::LoadMesh(cube.vertices, cube.indices, envCubemaps, "prefilter");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	unsigned int maxMipLevels = 9;
@@ -168,6 +164,8 @@ int main()
 		glViewport(0, 0, mipWidth, mipHeight);
 
 		float roughness = (float)mip / (float)(maxMipLevels - 1);
+		Resource::GetShader("prefilter").use();
+		Resource::GetShader("prefilter").setMat4("projection", captureProjection);
 		Resource::GetShader("prefilter").setFloat("roughness", roughness);
 
 		for (unsigned int i = 0; i < 6; ++i)
@@ -175,7 +173,7 @@ int main()
 			Resource::GetShader("prefilter").setMat4("view", captureViews[i]);
 			glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, Resource::GetTexture("prefilterCubemap").ID, mip);
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-			renderCube();
+			Resource::GetMesh("prefilter").Draw(Resource::GetShader("prefilter"));
 		}
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -209,6 +207,7 @@ int main()
 	BallRenderer ball(Resource::GetShader("ball"), Resource::GetMesh("ball"));
 
 	Resource::LoadShader("background.vs", "background.fs", "background");
+	Resource::LoadMesh(cube.vertices, cube.indices, envCubemaps, "background");
 
 	// finish initialize
 	// -----------------------------------------------	
@@ -254,10 +253,7 @@ int main()
 		Resource::GetShader("background").use();
 		Resource::GetShader("background").setMat4("view", view);
 		Resource::GetShader("background").setMat4("projection", projection);
-		Resource::GetShader("background").setInt("environmentMap", 0);
-		glActiveTexture(GL_TEXTURE0);
-		Resource::GetTexture("envCubemap").Bind();
-		renderCube();
+		Resource::GetMesh("background").Draw(Resource::GetShader("background"));
 
 		// Swap Buffer
 		glfwSwapBuffers(window);
@@ -307,79 +303,6 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
-
-unsigned int cubeVAO = 0;
-unsigned int cubeVBO = 0;
-void renderCube()
-{
-	// initialize (if necessary)
-	if (cubeVAO == 0)
-	{
-		float vertices[] = {
-			// back face
-			-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-			 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-			 1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 0.0f, // bottom-right         
-			 1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 1.0f, 1.0f, // top-right
-			-1.0f, -1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 0.0f, // bottom-left
-			-1.0f,  1.0f, -1.0f,  0.0f,  0.0f, -1.0f, 0.0f, 1.0f, // top-left
-			// front face
-			-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-			 1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 0.0f, // bottom-right
-			 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-			 1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 1.0f, 1.0f, // top-right
-			-1.0f,  1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 1.0f, // top-left
-			-1.0f, -1.0f,  1.0f,  0.0f,  0.0f,  1.0f, 0.0f, 0.0f, // bottom-left
-			// left face
-			-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-			-1.0f,  1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-left
-			-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-			-1.0f, -1.0f, -1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-left
-			-1.0f, -1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-			-1.0f,  1.0f,  1.0f, -1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-right
-			// right face
-			 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-			 1.0f,  1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 1.0f, // top-right         
-			 1.0f, -1.0f, -1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 1.0f, // bottom-right
-			 1.0f,  1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 1.0f, 0.0f, // top-left
-			 1.0f, -1.0f,  1.0f,  1.0f,  0.0f,  0.0f, 0.0f, 0.0f, // bottom-left     
-			 // bottom face
-			 -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-			  1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 1.0f, // top-left
-			  1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-			  1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 1.0f, 0.0f, // bottom-left
-			 -1.0f, -1.0f,  1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 0.0f, // bottom-right
-			 -1.0f, -1.0f, -1.0f,  0.0f, -1.0f,  0.0f, 0.0f, 1.0f, // top-right
-			 // top face
-			 -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-			  1.0f,  1.0f , 1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-			  1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 1.0f, // top-right     
-			  1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 1.0f, 0.0f, // bottom-right
-			 -1.0f,  1.0f, -1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 1.0f, // top-left
-			 -1.0f,  1.0f,  1.0f,  0.0f,  1.0f,  0.0f, 0.0f, 0.0f  // bottom-left        
-		};
-		glGenVertexArrays(1, &cubeVAO);
-		glGenBuffers(1, &cubeVBO);
-		// fill buffer
-		glBindBuffer(GL_ARRAY_BUFFER, cubeVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-		// link vertex attributes
-		glBindVertexArray(cubeVAO);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(3 * sizeof(float)));
-		glEnableVertexAttribArray(2);
-		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
-		glBindBuffer(GL_ARRAY_BUFFER, 0);
-		glBindVertexArray(0);
-	}
-	// render Cube
-	glBindVertexArray(cubeVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
-	glBindVertexArray(0);
 }
 
 unsigned int quadVAO = 0;

@@ -2,7 +2,7 @@
 out vec4 FragColor;
 in vec3 WorldPos;
 
-uniform sampler2D hdrMap;
+uniform sampler2D hdr;
 
 const vec2 invAtan = vec2(0.1591, 0.3183);
 vec2 SampleSphericalMap(vec3 v)
@@ -16,7 +16,7 @@ vec2 SampleSphericalMap(vec3 v)
 void main()
 {		
     vec2 uv = SampleSphericalMap(normalize(WorldPos));
-    vec3 color = texture(hdrMap, uv).rgb;
+    vec3 color = texture(hdr, uv).rgb;
     
     FragColor = vec4(color, 1.0);
 }
