@@ -25,7 +25,7 @@ const int screenWidth = 2000;
 const int screenHeight = 1500;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 3.0f));
+Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
 float lastX = screenWidth / 2;
 float lastY = screenHeight / 2;
 bool firstMouse = true;
@@ -105,6 +105,7 @@ int main()
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
 
+	/*
 	// start render hdr map
 	Resource::LoadTexture("", "envCubemap", "cubemap");
 	std::vector<Texture> hdrTextures;
@@ -125,6 +126,8 @@ int main()
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	Resource::GetTexture("envCubemap").GenerateMipmap();
+	*/
+	Resource::LoadTexture("resources/cubemap/cubemap", "envCubemap", "cubemap");
 
 	// start render irradiance map
 	Resource::LoadTexture("", "irrCubemap", "cubemap");
@@ -248,10 +251,11 @@ int main()
 		Resource::GetShader("ball").setVec3("viewPos", camera.Position);
 		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 2.0f));
 
-		ball.Draw(glm::vec3(0.2f, 0.2f, 2.7f), 0.1f);
+		ball.Draw(glm::vec3(0.0f, 0.0f, 0.0f), 0.3f);
 
 		Resource::GetShader("background").use();
 		Resource::GetShader("background").setMat4("view", view);
+		Resource::GetShader("background").setMat4("model", glm::translate(glm::mat4(0.3f), glm::vec3(0.0f, 0.7f, 0.0f)));
 		Resource::GetShader("background").setMat4("projection", projection);
 		Resource::GetMesh("background").Draw(Resource::GetShader("background"));
 
@@ -333,3 +337,4 @@ void renderQuad()
 	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 	glBindVertexArray(0);
 }
+

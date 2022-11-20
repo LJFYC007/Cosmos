@@ -73,7 +73,7 @@ void main()
     vec3 N = getNormalFromMap(), V = normalize(viewPos - fs_in.FragPos), R = reflect(-V, N);
     vec3 Lo = vec3(0.0), F0 = vec3(0.04); F0 = mix(F0, albedo, metallic);
 
-    for ( int i = 0; i < 1; ++ i )
+    for ( int i = 0; i < 0; ++ i )
     {
         vec3 lightColor = vec3(100.0);
         vec3 L = normalize(lightPos - fs_in.FragPos), H = normalize(V + L);
