@@ -162,6 +162,8 @@
   <ItemGroup>
     <None Include="shaders\background.fs" />
     <None Include="shaders\background.vs" />
+    <None Include="shaders\backquad.fs" />
+    <None Include="shaders\backquad.vs" />
     <None Include="shaders\ball.fs" />
     <None Include="shaders\ball.vs" />
     <None Include="shaders\brdf.fs" />

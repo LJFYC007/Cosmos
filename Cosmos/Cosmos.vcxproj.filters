@@ -130,5 +130,11 @@
     <None Include="shaders\brdf.vs">
       <Filter>Source Files\shaders</Filter>
     </None>
+    <None Include="shaders\backquad.fs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
+    <None Include="shaders\backquad.vs">
+      <Filter>Source Files\shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

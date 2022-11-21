@@ -213,6 +213,17 @@ int main()
 	Resource::LoadShader("background.vs", "background.fs", "background");
 	Resource::LoadMesh(cube.vertices, cube.indices, envCubemaps, "background");
 
+	Resource::LoadShader("backquad.vs", "backquad.fs", "backquad");
+	std::vector<Texture> quadMap1;
+	quadMap1.push_back(Resource::LoadTexture("resources/cubemap/cubemap-left.jpg", "cubemap-left", "diffuse"));
+	Resource::LoadMesh(quad.vertices, quad.indices, quadMap1, "backquad1");
+	std::vector<Texture> quadMap2;
+	quadMap2.push_back(Resource::LoadTexture("resources/cubemap/cubemap-right.jpg", "cubemap-left", "diffuse"));
+	Resource::LoadMesh(quad.vertices, quad.indices, quadMap2, "backquad2");
+	std::vector<Texture> quadMap3;
+	quadMap3.push_back(Resource::LoadTexture("resources/cubemap/cubemap-front.jpg", "cubemap-front", "diffuse"));
+	Resource::LoadMesh(quad.vertices, quad.indices, quadMap3, "backquad3");
+
 	// finish initialize
 	// -----------------------------------------------	
 	glViewport(0, 0, screenWidth, screenHeight);
@@ -252,13 +263,73 @@ int main()
 		Resource::GetShader("ball").setVec3("viewPos", camera.Position);
 		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 2.0f));
 
-		ball.Draw(glm::vec3(0.0f, 0.0f, 0.0f), 0.3f);
+		ball.Draw(glm::vec3(0.3f, -0.2f, 0.0f), 0.3f);
 
+		/*
 		Resource::GetShader("background").use();
 		Resource::GetShader("background").setMat4("view", view);
 		Resource::GetShader("background").setMat4("model", glm::translate(glm::mat4(0.3f), glm::vec3(0.0f, 0.7f, 0.0f)));
 		Resource::GetShader("background").setMat4("projection", projection);
 		Resource::GetMesh("background").Draw(Resource::GetShader("background"));
+		*/
+
+		Resource::GetShader("backquad").use();
+		Resource::GetShader("backquad").setMat4("view", view);
+		Resource::GetShader("backquad").setMat4("projection", projection);
+		glm::mat4 model;
+
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -0.5f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.5f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.5f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad1").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad1").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-0.5f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad2").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad2").Draw(Resource::GetShader("backquad"));
 
 		// Swap Buffer
 		glfwSwapBuffers(window);
