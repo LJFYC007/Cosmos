@@ -71,6 +71,9 @@
     <ClInclude Include="include\cube.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\quad.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\ball.fs">

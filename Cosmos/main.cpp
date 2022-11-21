@@ -10,6 +10,7 @@
 #include "include/resource.h"
 #include "include/texture.h"
 #include "include/sphere.h"
+#include "include/quad.h"
 #include "include/cube.h"
 #include "include/debug.h"
 #include "ball_render.h"
@@ -39,13 +40,13 @@ int fpsFrames = 0;
 // standard objects
 Sphere sphere;
 Cube cube;
+Quad quad;
 
 // frame settings
 void framebuffer_size_callback(GLFWwindow * window, int width, int height);
 void processInput(GLFWwindow * window);
 void mouse_callback(GLFWwindow * window, double xposIn, double yposIn);
 void scroll_callback(GLFWwindow * window, double xoffset, double yoffset);
-void renderQuad();
 
 int main()
 {
@@ -105,7 +106,6 @@ int main()
 		glm::lookAt(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f,  0.0f, -1.0f), glm::vec3(0.0f, -1.0f,  0.0f))
 	};
 
-	/*
 	// start render hdr map
 	Resource::LoadTexture("", "envCubemap", "cubemap");
 	std::vector<Texture> hdrTextures;
@@ -126,8 +126,7 @@ int main()
 	}
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 	Resource::GetTexture("envCubemap").GenerateMipmap();
-	*/
-	Resource::LoadTexture("resources/cubemap/cubemap", "envCubemap", "cubemap");
+	// Resource::LoadTexture("resources/cubemap/cubemap", "envCubemap", "cubemap");
 
 	// start render irradiance map
 	Resource::LoadTexture("", "irrCubemap", "cubemap");
@@ -184,6 +183,8 @@ int main()
 	// start render brdf map
 	Resource::LoadTexture("", "brdfTexture", "brdf");
 	Resource::LoadShader("brdf.vs", "brdf.fs", "brdf");
+	std::vector<Texture> emptyTextures;
+	Resource::LoadMesh(quad.vertices, quad.indices, emptyTextures, "brdf");
 
 	glBindFramebuffer(GL_FRAMEBUFFER, captureFBO);
 	glBindRenderbuffer(GL_RENDERBUFFER, captureRBO);
@@ -193,7 +194,7 @@ int main()
 	glViewport(0, 0, 512, 512);
 	Resource::GetShader("brdf").use();
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	renderQuad();
+	Resource::GetMesh("brdf").Draw(Resource::GetShader("brdf"));
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	// load shader & textures & meshes
@@ -307,34 +308,5 @@ void mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
 void scroll_callback(GLFWwindow* window, double xoffset, double yoffset)
 {
 	camera.ProcessMouseScroll(static_cast<float>(yoffset));
-}
-
-unsigned int quadVAO = 0;
-unsigned int quadVBO;
-void renderQuad()
-{
-	if (quadVAO == 0)
-	{
-		float quadVertices[] = {
-			// positions        // texture Coords
-			-1.0f,  1.0f, 0.0f, 0.0f, 1.0f,
-			-1.0f, -1.0f, 0.0f, 0.0f, 0.0f,
-			 1.0f,  1.0f, 0.0f, 1.0f, 1.0f,
-			 1.0f, -1.0f, 0.0f, 1.0f, 0.0f,
-		};
-		// setup plane VAO
-		glGenVertexArrays(1, &quadVAO);
-		glGenBuffers(1, &quadVBO);
-		glBindVertexArray(quadVAO);
-		glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(quadVertices), &quadVertices, GL_STATIC_DRAW);
-		glEnableVertexAttribArray(0);
-		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
-		glEnableVertexAttribArray(1);
-		glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
-	}
-	glBindVertexArray(quadVAO);
-	glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-	glBindVertexArray(0);
 }
 
