@@ -14,13 +14,13 @@ class Distance
 	// struct Vertex { glm::vec3 Position, Normal; glm::vec2 TexCoords; };
 	// 上面是 Vertex 的定义函数，如果需要用法线直接调用就行
 public: 
-	void SetupDistanceField(std::vector<Vertex> vertices) ;
+	void SetupDistanceField(std::vector<Vertex> vertices, std::vector<unsigned int> indices) ;
 
 	float QueryDistance(glm::vec3 point);
 private: 
 };
 
-void Distance::SetupDistanceField(std::vector<Vertex> vertices)
+void Distance::SetupDistanceField(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 {
 
 }
