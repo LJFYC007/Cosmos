@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClInclude Include="ball_render.h" />
     <ClInclude Include="calculate.h" />
+    <ClInclude Include="distance.h" />
     <ClInclude Include="earth_render.h" />
     <ClInclude Include="include\camera.h" />
     <ClInclude Include="include\cube.h" />
