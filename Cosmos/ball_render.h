@@ -24,9 +24,9 @@ void BallRenderer::Draw(glm::vec3 position, GLfloat size)
     model = glm::scale(model, glm::vec3(size));
     shader.setMat4("model", model);
 
-    shader.setVec3("albedo", 0.0f, 1.0f, 0.0f);
-    shader.setFloat("metallic", 0.6f);
-	shader.setFloat("roughness", 0.4f);
+    shader.setVec3("albedo", 0.4f, 0.3f, 0.8f);
+    shader.setFloat("metallic", 0.8f);
+	shader.setFloat("roughness", 0.2f);
 	shader.setFloat("ao", 1.0f);
 
     mesh.Draw(shader);

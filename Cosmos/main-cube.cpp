@@ -15,7 +15,6 @@
 #include "include/debug.h"
 #include "ball_render.h"
 #include "calculate.h"
-#include "distance.h"
 
 #include <iostream>
 #include <vector>
@@ -215,26 +214,15 @@ int main()
 	Resource::LoadMesh(cube.vertices, cube.indices, envCubemaps, "background");
 
 	Resource::LoadShader("backquad.vs", "backquad.fs", "backquad");
-	std::vector<Texture> quadMap;
-	quadMap.push_back(Resource::LoadTexture("resources/cubemap/cubemap_bottom.jpg", "bottom", "diffuse"));
-	Resource::LoadMesh(quad.vertices, quad.indices, quadMap, "backquad");
-
-	// --------------- distance field ----------------
-	Distance distance;
-	distance.SetupDistanceField(sphere.vertices, sphere.indices);
-	GLfloat* distanceData = distance.QueryDistance();
-
-	unsigned int distanceField;
-	glGenTextures(1, &distanceField);
-	glBindTexture(GL_TEXTURE_3D, distanceField);
-	glTexImage3D(GL_TEXTURE_3D, 0, GL_R16F, 64, 64, 64, 0, GL_RED, GL_FLOAT, distanceData);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glGenerateMipmap(GL_TEXTURE_3D);
-	glBindTexture(GL_TEXTURE_3D, 0);
+	std::vector<Texture> quadMap1;
+	quadMap1.push_back(Resource::LoadTexture("resources/cubemap/cubemap-left.jpg", "cubemap-left", "diffuse"));
+	Resource::LoadMesh(quad.vertices, quad.indices, quadMap1, "backquad1");
+	std::vector<Texture> quadMap2;
+	quadMap2.push_back(Resource::LoadTexture("resources/cubemap/cubemap-right.jpg", "cubemap-left", "diffuse"));
+	Resource::LoadMesh(quad.vertices, quad.indices, quadMap2, "backquad2");
+	std::vector<Texture> quadMap3;
+	quadMap3.push_back(Resource::LoadTexture("resources/cubemap/cubemap-front.jpg", "cubemap-front", "diffuse"));
+	Resource::LoadMesh(quad.vertices, quad.indices, quadMap3, "backquad3");
 
 	// finish initialize
 	// -----------------------------------------------	
@@ -273,26 +261,75 @@ int main()
 		Resource::GetShader("ball").setMat4("projection", projection);
 		Resource::GetShader("ball").setMat4("view", view);
 		Resource::GetShader("ball").setVec3("viewPos", camera.Position);
-		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(0.2f, 0.0f, 0.2f));
+		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 2.0f));
 
-		ball.Draw(glm::vec3(0.0f, 0.0f, 0.0f));
+		ball.Draw(glm::vec3(0.3f, -0.2f, 0.0f), 0.3f);
+
+		/*
+		Resource::GetShader("background").use();
+		Resource::GetShader("background").setMat4("view", view);
+		Resource::GetShader("background").setMat4("model", glm::translate(glm::mat4(0.3f), glm::vec3(0.0f, 0.7f, 0.0f)));
+		Resource::GetShader("background").setMat4("projection", projection);
+		Resource::GetMesh("background").Draw(Resource::GetShader("background"));
+		*/
 
 		Resource::GetShader("backquad").use();
 		Resource::GetShader("backquad").setMat4("view", view);
 		Resource::GetShader("backquad").setMat4("projection", projection);
-		Resource::GetShader("backquad").setVec3("lightPos", glm::vec3(0.2f, 0.0f, 0.2f));
 		glm::mat4 model;
 
-		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.1f));
+		model = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -1.0f));
 		model = glm::scale(model, glm::vec3(0.5f));
 		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
 
-		glActiveTexture(GL_TEXTURE1);
-		Resource::GetShader("backquad").setInt("map", 1);
-		glBindTexture(GL_TEXTURE_3D, distanceField);
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, -0.5f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
 
-		Resource::GetMesh("backquad").Draw(Resource::GetShader("backquad"));
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.5f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad3").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.5f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad1").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad1").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(-0.5f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad2").Draw(Resource::GetShader("backquad"));
+
+		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.5f));
+		model = glm::scale(model, glm::vec3(0.5f));
+		Resource::GetShader("backquad").setMat4("model", model);
+		Resource::GetMesh("backquad2").Draw(Resource::GetShader("backquad"));
 
 		// Swap Buffer
 		glfwSwapBuffers(window);

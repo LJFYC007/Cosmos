@@ -107,6 +107,8 @@ void main()
 
     vec3 ambient = (kD * diffuse + specular) * ao;
 
+    ambient = specular * ao;
+
 	vec3 color = ambient + Lo;  
 
     color = color / (color + vec3(1.0));
