@@ -26,21 +26,31 @@ vec3 getNormalFromMap()
     return normalize(TBN * tangentNormal);
 }
 
+float Solve(vec3 pos)
+{
+    float r = 0.1f, lambda = 1 - sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z) / r;
+    vec3 x = pos / (1 - lambda);
+    return length(pos - x);
+}
+
 float rayMarching(vec3 pos, vec3 dir)
 {
     float res = 1.0, maxLength = length(dir); dir = normalize(dir);
     for ( float t = 0; t < maxLength; )
     {
-        float len = texture(map, pos + t * dir + vec3(0.5f)).x; 
-        if ( len < 0.001f ) 
-            return 0.0f;
-        res = min(res, 2 * len / t);
+        float len = Solve(pos + t * dir); //texture(map, pos + t * dir + vec3(0.5f)).x; 
+        //res = min(res, 2 * len / t);
+        res = min(res, atan(len, maxLength - t));
         /*
         float ph = 1e20;
         float x = len * len / (2.0 * ph);
         float d = sqrt(len * len - x * x);
         res = min(res, 2 * d / max(0.0, t - x));
         */
+
+        if ( len < 0.001f ) 
+            return res;
+
         t += len;
     }
     return res;
