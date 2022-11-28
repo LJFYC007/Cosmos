@@ -28,17 +28,20 @@ vec3 getNormalFromMap()
 
 float rayMarching(vec3 pos, vec3 dir)
 {
-    return texture(map, Pos + vec3(0.5f)).x;
-    float res = 1.0, maxLength = 0.9 * length(dir); 
-    int cnt = 0;
+    float res = 1.0, maxLength = length(dir); dir = normalize(dir);
     for ( float t = 0; t < maxLength; )
     {
-        float len = texture(map, pos + t * dir).x; 
+        float len = texture(map, pos + t * dir + vec3(0.5f)).x; 
         if ( len < 0.001f ) 
             return 0.0f;
-        // res = min(res, 2 * len / t);
+        res = min(res, 2 * len / t);
+        /*
+        float ph = 1e20;
+        float x = len * len / (2.0 * ph);
+        float d = sqrt(len * len - x * x);
+        res = min(res, 2 * d / max(0.0, t - x));
+        */
         t += len;
-        ++ cnt; if ( cnt > 20 ) break ; 
     }
     return res;
 }

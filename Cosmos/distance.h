@@ -34,8 +34,6 @@ void Distance::SetupDistanceField(std::vector<Vertex> vertices, std::vector<unsi
 				}
 	}
 	for (int i = 0;i < 64 * 64 * 64;++i)fuckGG[i] = sqrt(fuckGG[i]);
-	std::cerr << fuckGG[32 * 64 * 64 + 32 * 64 + 32] << std::endl;
-	std::cerr << fuckGG[0 * 64 * 64 + 32 * 64 + 32] << std::endl;
 }
 
 float *Distance::QueryDistance()
