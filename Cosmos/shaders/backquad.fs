@@ -3,7 +3,6 @@ out vec4 FragColor;
 in vec2 TexCoords;
 in vec3 Normal;
 in vec3 FragPos;
-in vec3 Pos;
 
 uniform sampler2D diffuse;
 uniform sampler3D map;
@@ -36,23 +35,12 @@ float Solve(vec3 pos)
 float rayMarching(vec3 pos, vec3 dir)
 {
     float maxLength = length(dir); 
-    float ph = 1e20, eps = 0.001;
     float res = min(1.0, asin(Solve(pos + dir) / maxLength));
     dir = normalize(dir);
     for ( float t = 0.01; t < maxLength; )
     {
         float len = Solve(pos + t * dir); //texture(map, pos + t * dir + vec3(0.5f)).x; 
-        // res = min(res, len / t);
         res = min(res, asin(len / t));
-        // res = min(res, t / len);
-
-        /*
-        float x = len * len / (2.0 * ph);
-        float d = sqrt(len * len - x * x);
-        res = min(res, 10.0 * d / max(0.0, t - x));
-        ph = len;
-        */
-
         if ( len < 0.0001 ) break ; 
         t += len;
     }
@@ -66,7 +54,7 @@ void main()
 {		
     vec3 envColor = texture(diffuse, TexCoords).rgb;
 
-    envColor = rayMarching(Pos, lightPos - Pos) * envColor;
+    envColor = rayMarching(FragPos, lightPos - FragPos) * envColor;
     
     // HDR tonemap and gamma correct
     envColor = envColor / (envColor + vec3(1.0));
