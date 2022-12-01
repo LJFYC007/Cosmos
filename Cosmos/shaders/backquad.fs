@@ -37,13 +37,16 @@ float rayMarching(vec3 pos, vec3 dir)
     float maxLength = length(dir); 
     float res = min(1.0, asin(Solve(pos + dir) / maxLength));
     dir = normalize(dir);
+    int cnt = 0;
     for ( float t = 0.01; t < maxLength; )
     {
         //float len = Solve(pos + t * dir); 
-        float len = texture(map, pos + t * dir + vec3(0.5f)).x; 
+        float len = (texture(map, (pos + t * dir + vec3(1.0f)) / 2)).x; 
         res = min(res, asin(len / t));
         if ( len < 0.0001 ) break ; 
         t += len;
+        ++ cnt;
+        if ( cnt > 32 ) break ; 
     }
     return res;
     
