@@ -77,6 +77,9 @@
     <ClInclude Include="distance.h">
       <Filter>Source Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\model.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shaders\ball.fs">

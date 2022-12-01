@@ -13,6 +13,7 @@
 #include "include/quad.h"
 #include "include/cube.h"
 #include "include/debug.h"
+#include "include/model.h"
 #include "ball_render.h"
 #include "calculate.h"
 #include "distance.h"
@@ -243,6 +244,8 @@ int main()
 	glCheckError();
 	std::cout << "Finish Initialize ---------- Start Rendering" << std::endl;
 
+	// Model Hahaha("resources/ball.obj");
+
 	// render loop
 	// -----------------------------------------------	
 	while (!glfwWindowShouldClose(window))
@@ -294,6 +297,8 @@ int main()
 		glBindTexture(GL_TEXTURE_3D, distanceField);
 
 		Resource::GetMesh("backquad").Draw(Resource::GetShader("backquad"));
+
+		// Hahaha.Draw(Resource::GetShader("backquad"));
 
 		// Swap Buffer
 		glfwSwapBuffers(window);
