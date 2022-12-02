@@ -50,7 +50,7 @@ glm::vec3 Distance2::QueryDistance(glm::vec3 v)
 				if (!inx) dx = (v.x - x) * (v.x - x);
 				if (!iny) dy = (v.y - y) * (v.y - y);
 				if (!inz) dz = (v.z - z) * (v.z - z);
-				if (ans > dx + dy + dz)dis = dx + dy + dz,ans=glm::vec3(x,y,z);
+				if (dis > dx + dy + dz)dis = dx + dy + dz,ans=glm::vec3(x,y,z);
 			}
 	if (inx)ans.x = v.x;
 	if (iny)ans.y = v.y;
