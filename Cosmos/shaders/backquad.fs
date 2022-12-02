@@ -27,6 +27,9 @@ vec3 getNormalFromMap()
 
 float Solve(vec3 pos)
 {
+    if ( abs(pos.x) <= 0.1f && abs(pos.y) <= 0.1f && abs(pos.z) <= 0.1f )
+        return texture(map, pos * 5 + vec3(0.5f)).x;
+
     float r = 0.1f, lambda = 1 - sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z) / r;
     vec3 x = pos / (1 - lambda);
 	return length(pos - x);
@@ -35,15 +38,17 @@ float Solve(vec3 pos)
 float rayMarching(vec3 pos, vec3 dir)
 {
     float maxLength = length(dir); 
-    float res = min(1.0, asin(Solve(pos + dir) / maxLength));
+    float res = min(1.0, Solve(pos + dir) / maxLength);
+    // float res = min(1.0, asin(Solve(pos + dir) / maxLength));
     dir = normalize(dir);
     int cnt = 0;
     for ( float t = 0.01; t < maxLength; )
     {
-        //float len = Solve(pos + t * dir); 
-        float len = (texture(map, (pos + t * dir + vec3(1.0f)) / 2)).x; 
-        res = min(res, asin(len / t));
-        if ( len < 0.0001 ) break ; 
+        float len = Solve(pos + t * dir); 
+        // float len = length(texture(map, pos + t * dir + vec3(0.5f)).rgb); 
+        // res = min(res, asin(len / t));
+        res = min(res, len / t);
+        if ( len < 0.000001 ) return 0.0f ; 
         t += len;
         ++ cnt;
         if ( cnt > 32 ) break ; 

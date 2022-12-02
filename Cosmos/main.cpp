@@ -55,6 +55,7 @@ int main()
 	// Initialize
 	// -----------------------------------------------	
 	glfwInit();
+	glfwWindowHint(GLFW_SAMPLES, 4);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -83,6 +84,8 @@ int main()
 	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LEQUAL);
 	glEnable(GL_TEXTURE_CUBE_MAP_SEAMLESS);
+	glEnable(GL_MULTISAMPLE);
+
 	glCheckError();
 
 	// PBR skybox setup
@@ -232,8 +235,6 @@ int main()
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-	//glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	//glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_3D, 0);
@@ -277,14 +278,14 @@ int main()
 		Resource::GetShader("ball").setMat4("projection", projection);
 		Resource::GetShader("ball").setMat4("view", view);
 		Resource::GetShader("ball").setVec3("viewPos", camera.Position);
-		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(0.3f, 0.1f, 0.3f));
+		Resource::GetShader("ball").setVec3("lightPos", glm::vec3(0.3f, 0.3f, 0.3f));
 
 		ball.Draw(glm::vec3(0.0f, 0.0f, 0.0f));
 
 		Resource::GetShader("backquad").use();
 		Resource::GetShader("backquad").setMat4("view", view);
 		Resource::GetShader("backquad").setMat4("projection", projection);
-		Resource::GetShader("backquad").setVec3("lightPos", glm::vec3(0.3f, 0.1f, 0.3f));
+		Resource::GetShader("backquad").setVec3("lightPos", glm::vec3(0.3f, 0.3f, 0.3f));
 		glm::mat4 model;
 
 		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));

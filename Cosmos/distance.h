@@ -15,68 +15,31 @@ public:
 	void SetupDistanceField(std::vector<Vertex> vertices, std::vector<unsigned int> indices) ;
 	float *QueryDistance();
 private:
-	float eps = 0.00001;
+	int get(int i, int j, int k) { return i * 64 * 64 + j * 64 + k; }
 };
 
 void Distance::SetupDistanceField(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
 {
-	for (int i = 0; i < 64 * 64 * 64; ++i)
-		fuckGG[i] = 10.0f;
-	float Unt = 2.0 / 63;
-	for (int t = 0; t < indices.size(); t++) {
-		glm::vec3 v0 = vertices[indices[t]].Position;
-		for (int i = 0; i < 64; ++i)
-			for (int j = 0; j < 64; ++j)
-				for (int k = 0; k < 64; ++k) {
-					glm::vec3 v = glm::vec3(i * Unt - 1.0f, j * Unt - 1.0f, k * Unt - 1.0f);
-					float t = (v.x - v0.x) * (v.x - v0.x) + (v.y - v0.y) * (v.y - v0.y) + (v.z - v0.z) * (v.z - v0.z);
-					fuckGG[i * 64 * 64 + j * 64 + k] = std::min(fuckGG[i * 64 * 64 + j * 64 + k], sqrt(t));
+	float Unt = 0.2f / 63;
+	for (int i = 0; i < 64; ++i) 
+		for (int j = 0; j < 64; ++j) 
+			for (int k = 0; k < 64; ++k) {
+				fuckGG[get(i, j, k)] = 1.0f;
+
+				glm::vec3 v(i * Unt - 0.1f, j * Unt - 0.1f, k * Unt - 0.1f);
+				for (int t = 0;t < vertices.size();t ++) {
+					glm::vec3 v0 = vertices[t].Position;
+					glm::vec3 gg(v0.x - v.x, v0.y - v.y, v0.z - v.z);
+					float distance = glm::length(gg);
+					fuckGG[get(i, j, k)] = std::min(distance, fuckGG[get(i, j, k)]);
 				}
-	}
+
+				if (glm::length(v) < 0.1f)
+					fuckGG[get(i, j, k)] = -fuckGG[get(i, j, k)];
+			}
 }
 
 float *Distance::QueryDistance()
 {
 	return fuckGG;
 }
-
-/*
-float fuckGG[64 * 64 * 64 * 3];
-
-class Distance
-{
-public: 
-	void SetupDistanceField(std::vector<Vertex> vertices, std::vector<unsigned int> indices) ;
-	float *QueryDistance();
-private:
-	float eps = 0.00001;
-	int get(int i, int j, int k, int w) { return (i * 64 * 64 + j * 64 + k) * 3 + w; }
-};
-
-void Distance::SetupDistanceField(std::vector<Vertex> vertices, std::vector<unsigned int> indices)
-{
-	for (int i = 0; i < 64 * 64 * 64 * 3; ++i)
-		fuckGG[i] = 10.0f;
-	float Unt = 1.0 / 63;
-	for (int t = 0;t < indices.size();t ++) {
-		glm::vec3 v0 = vertices[indices[t]].Position;
-		for(int i=0;i<64;++i)
-			for(int j=0;j<64;++j)
-				for (int k = 0;k < 64;++k) {
-					glm::vec3 v = glm::vec3(i * Unt - 0.5f, j * Unt - 0.5f, k * Unt - 0.5f);
-					glm::vec3 t(v.x - v0.x, v.y - v0.y, v.z - v0.z);
-					if ( glm::length(t) < glm::length(glm::vec3(fuckGG[get(i, j, k, 0)], fuckGG[get(i, j, k, 1)], fuckGG[get(i, j, k, 2)])) )
-					{ 
-						fuckGG[get(i, j, k, 0)] = t.x;
-						fuckGG[get(i, j, k, 1)] = t.y;
-						fuckGG[get(i, j, k, 2)] = t.z;
-					}
-				}
-	}
-}
-
-float *Distance::QueryDistance()
-{
-	return fuckGG;
-}
-*/
