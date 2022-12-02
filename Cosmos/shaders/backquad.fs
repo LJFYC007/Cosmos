@@ -25,14 +25,64 @@ vec3 getNormalFromMap()
     return normalize(TBN * tangentNormal);
 }
 
+float QueryDistance(vec3 v)
+{
+	bool inx = -0.1 <= v.x && v.x <= 0.1;
+	bool iny = -0.1 <= v.y && v.y <= 0.1;
+	bool inz = -0.1 <= v.z && v.z <= 0.1;
+	float dx = 0, dy = 0, dz = 0,ans=100;
+	for(int i=0;i<=1;++i)
+		for(int j=0;j<=1;++j)
+			for (int k = 0;k <= 1;++k) {
+                float x = i == 0 ? -0.1 : 0.1;
+                float y = j == 0 ? -0.1 : 0.1;
+                float z = k == 0 ? -0.1 : 0.1;
+				if (!inx) dx = (v.x - x) * (v.x - x);
+				if (!iny) dy = (v.y - y) * (v.y - y);
+				if (!inz) dz = (v.z - z) * (v.z - z);
+				ans = min(ans, dx + dy + dz);
+			}
+	return sqrt(ans); 
+}
+
+vec3 QueryDistanceVec(vec3 v)
+{
+	bool inx = -0.1 <= v.x && v.x <= 0.1;
+	bool iny = -0.1 <= v.y && v.y <= 0.1;
+	bool inz = -0.1 <= v.z && v.z <= 0.1;
+	vec3 ans;
+	float dx = 0, dy = 0, dz = 0, dis = 100;
+	for (int i = 0;i <= 1;++i)
+		for (int j = 0;j <= 1;++j)
+			for (int k = 0;k <= 1;++k) {
+                float x = i == 0 ? -0.1 : 0.1;
+                float y = j == 0 ? -0.1 : 0.1;
+                float z = k == 0 ? -0.1 : 0.1;
+				if (!inx) dx = (v.x - x) * (v.x - x);
+				if (!iny) dy = (v.y - y) * (v.y - y);
+				if (!inz) dz = (v.z - z) * (v.z - z);
+				if (dis > dx + dy + dz)dis = dx + dy + dz,ans=vec3(x,y,z);
+			}
+	if (inx)ans.x = v.x;
+	if (iny)ans.y = v.y;
+	if (inz)ans.z = v.z;
+	return ans;
+}
+
 float Solve(vec3 pos)
 {
-    if ( abs(pos.x) <= 0.1f && abs(pos.y) <= 0.1f && abs(pos.z) <= 0.1f )
-        return texture(map, pos * 5 + vec3(0.5f)).x;
-
+    /*
     float r = 0.1f, lambda = 1 - sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z) / r;
     vec3 x = pos / (1 - lambda);
 	return length(pos - x);
+    */
+
+    if ( abs(pos.x) <= 0.1f && abs(pos.y) <= 0.1f && abs(pos.z) <= 0.1f )
+        return texture(map, pos * 5 + vec3(0.5f)).x;
+
+    float len = QueryDistance(pos);
+    vec3 x = QueryDistanceVec(pos);
+    return texture(map, x * 5 + vec3(0.5f)).x + len;
 }
 
 float rayMarching(vec3 pos, vec3 dir)
