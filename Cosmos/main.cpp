@@ -231,7 +231,7 @@ int main()
 	unsigned int distanceField;
 	glGenTextures(1, &distanceField);
 	glBindTexture(GL_TEXTURE_3D, distanceField);
-	glTexImage3D(GL_TEXTURE_3D, 0, GL_R16F, 64, 64, 64, 0, GL_RED, GL_FLOAT, distanceData);
+	glTexImage3D(GL_TEXTURE_3D, 0, GL_RGB16F, 128,128,128, 0, GL_RGB, GL_FLOAT, distanceData);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 	glTexParameteri(GL_TEXTURE_3D, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);

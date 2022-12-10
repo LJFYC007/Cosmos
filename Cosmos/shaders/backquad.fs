@@ -71,18 +71,28 @@ vec3 QueryDistanceVec(vec3 v)
 
 float Solve(vec3 pos)
 {
-    /*
+/*
     float r = 0.1f, lambda = 1 - sqrt(pos.x * pos.x + pos.y * pos.y + pos.z * pos.z) / r;
     vec3 x = pos / (1 - lambda);
 	return length(pos - x);
-    */
+*/
 
     if ( abs(pos.x) <= 0.1f && abs(pos.y) <= 0.1f && abs(pos.z) <= 0.1f )
-        return texture(map, pos * 5 + vec3(0.5f)).x;
+    {
+        if ( texture(map, pos * 5 + vec3(0.5f)).x < -0.2f ) return -100.0f;
+        if ( texture(map, pos * 5 + vec3(0.5f)).y < -0.2f ) return -100.0f;
+        if ( texture(map, pos * 5 + vec3(0.5f)).z < -0.2f ) return -100.0f;
+        return length(texture(map, pos * 5 + vec3(0.5f)).xyz);
+    }
 
     float len = QueryDistance(pos);
     vec3 x = QueryDistanceVec(pos);
-    return texture(map, x * 5 + vec3(0.5f)).x + len;
+
+    if ( texture(map, x * 5 + vec3(0.5f)).x < -0.2f ) return -100.0f;
+    if ( texture(map, x * 5 + vec3(0.5f)).y < -0.2f ) return -100.0f;
+    if ( texture(map, x * 5 + vec3(0.5f)).z < -0.2f ) return -100.0f;
+
+    return length(texture(map, x * 5 + vec3(0.5f)).xyz) + len;
 }
 
 float rayMarching(vec3 pos, vec3 dir)
