@@ -90,7 +90,7 @@ For IBL light: $k_{IBL}=\frac{\alpha^2}{2}$
 We can derive the Fresnel formula through the boundary value relation of the electromagnetic field($E_{1\tau}=E_{2\tau},H_{1\tau}=H_{2\tau}$).
 $r_{\parallel}=\frac{n_t\cos{\theta_i}-n_i\cos{\theta_t}}{n_t\cos{\theta_i}+n_i\cos{\theta_t}}$
 $r_{\perp}=\frac{n_i\cos{\theta_i}-n_t\cos{\theta_t}}{n_i\cos{\theta_i}+n_t\cos{\theta_t}}$
-(There are not very important in this part.)
+(These are not very important in this part.)
 * Schilick approximation of Fresnel's formula:
 $F(\vec{h},\vec{v},F_0)=F_0+(1-F_0)(1-\vec{h}\cdot \vec{v})^5$
 
