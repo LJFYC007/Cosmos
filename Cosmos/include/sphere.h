@@ -18,7 +18,7 @@ public:
     Sphere(GLuint Lats = 50, GLuint Lons = 50, GLfloat R = 0.1) : lats(Lats), lons(Lons), r(R) { createSphere(); }
 
 private:
-    glm::vec2 getTexCoord(GLfloat u, GLfloat v) { return glm::vec2(v, u); }
+    glm::vec2 getTexCoord(GLfloat u, GLfloat v) { return glm::vec2(1 - v, 1 - u); }
     glm::vec3 getTanCoord(GLfloat u, GLfloat v) { return glm::vec3(cos(u) * sin(v), cos(u) * cos(v), -sin(u)); }
     glm::vec3 getBitanCoord(GLfloat u, GLfloat v) { return glm::vec3(sin(u) * cos(v), -cos(u) * sin(v), 0); }
     glm::vec3 getPoint(GLfloat u, GLfloat v) ;

@@ -12,7 +12,7 @@ uniform samplerCube cubemap;
 uniform samplerCube cubemap2;
 uniform sampler2D brdf;
 
-uniform vec3 albedo;
+uniform vec3 Albedo;
 uniform float metallic;
 uniform float roughness;
 uniform float ao;
@@ -70,6 +70,8 @@ vec3 fresnelSchlickRoughness(float cosTheta, vec3 F0, float roughness)
 
 void main()
 {
+    vec3 albedo = pow(Albedo, vec3(2.2));  
+
     vec3 N = getNormalFromMap(), V = normalize(viewPos - fs_in.FragPos), R = reflect(-V, N);
     vec3 Lo = vec3(0.0), F0 = vec3(0.04); F0 = mix(F0, albedo, metallic);
 
@@ -108,6 +110,7 @@ void main()
     vec3 ambient = (kD * diffuse + specular) * ao;
 
     ambient = specular * ao;
+    ambient = vec3(0.03) * albedo * ao;
 
 	vec3 color = ambient + Lo;  
 

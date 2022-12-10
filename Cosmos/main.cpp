@@ -28,7 +28,7 @@ const int screenWidth = 2000;
 const int screenHeight = 1500;
 
 // camera
-Camera camera(glm::vec3(0.0f, 0.0f, 1.0f));
+Camera camera(glm::vec3(0.41f, 0.62f, -0.14f), glm::vec3(0.0f, 1.0f, 0.0f), 171.6f, -55.7f);
 float lastX = screenWidth / 2;
 float lastY = screenHeight / 2;
 bool firstMouse = true;
@@ -225,7 +225,7 @@ int main()
 
 	// --------------- distance field ----------------
 	Distance distance;
-	distance.SetupDistanceField(sphere.vertices, sphere.indices);
+	// distance.SetupDistanceField(sphere.vertices, sphere.indices);
 	GLfloat* distanceData = distance.QueryDistance();
 
 	unsigned int distanceField;
@@ -290,7 +290,7 @@ int main()
 
 		model = glm::rotate(glm::mat4(1.0f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
 		model = glm::translate(model, glm::vec3(0.0f, 0.0f, -0.1f));
-		model = glm::scale(model, glm::vec3(0.5f));
+		model = glm::scale(model, glm::vec3(2.0f));
 		Resource::GetShader("backquad").setMat4("model", model);
 
 		glActiveTexture(GL_TEXTURE1);
