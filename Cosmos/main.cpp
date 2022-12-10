@@ -225,7 +225,7 @@ int main()
 
 	// --------------- distance field ----------------
 	Distance distance;
-	// distance.SetupDistanceField(sphere.vertices, sphere.indices);
+	distance.SetupDistanceField(sphere.vertices, sphere.indices);
 	GLfloat* distanceData = distance.QueryDistance();
 
 	unsigned int distanceField;
