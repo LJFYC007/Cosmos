@@ -114,7 +114,7 @@ int main()
 	// start render hdr map
 	Resource::LoadTexture("", "envCubemap", "cubemap");
 	std::vector<Texture> hdrTextures;
-	hdrTextures.push_back(Resource::LoadTexture("resources/hdr/newport_loft.hdr", "hdrTexture", "hdr"));
+	hdrTextures.push_back(Resource::LoadTexture("resources/hdr/lake.hdr", "hdrTexture", "hdr"));
 	Resource::LoadShader("hdr.vs", "hdr.fs", "hdr");
 	Resource::LoadMesh(cube.vertices, cube.indices, hdrTextures, "hdr");
 
