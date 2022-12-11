@@ -142,13 +142,13 @@ int main()
 		Resource::GetShader("earth").setMat4("projection", projection);
 		Resource::GetShader("earth").setMat4("view", view);
 		Resource::GetShader("earth").setVec3("viewPos", camera.Position);
-		Resource::GetShader("earth").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 4.0f));
+		Resource::GetShader("earth").setVec3("lightPos", glm::vec3(2.0f, 0.5f, 2.0f));
 
 		Resource::GetShader("moon").use();
 		Resource::GetShader("moon").setMat4("projection", projection);
 		Resource::GetShader("moon").setMat4("view", view);
 		Resource::GetShader("moon").setVec3("viewPos", camera.Position);
-		Resource::GetShader("moon").setVec3("lightPos", glm::vec3(3.0f, 0.0f, 4.0f));
+		Resource::GetShader("moon").setVec3("lightPos", glm::vec3(2.0f, 0.5f, 2.0f));
 
 		Resource::GetShader("sun").use();
 		Resource::GetShader("sun").setMat4("projection", projection);

@@ -15,7 +15,7 @@ public:
     std::vector<Vertex> vertices;
     std::vector<unsigned int> indices;
 
-    Sphere(GLuint Lats = 100, GLuint Lons = 100, GLfloat R = 0.5) : lats(Lats), lons(Lons), r(R) { createSphere(); }
+    Sphere(GLuint Lats = 500, GLuint Lons = 500, GLfloat R = 0.5) : lats(Lats), lons(Lons), r(R) { createSphere(); }
 
 private:
     glm::vec2 getTexCoord(GLfloat u, GLfloat v) { return glm::vec2(v, u); }
